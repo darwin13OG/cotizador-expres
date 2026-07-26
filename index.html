@@ -16,25 +16,27 @@
         [v-cloak] { display: none; }
         body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
         
-        .app-container { transition: background 0.3s ease, color 0.3s ease; min-height: 100vh; width: 100%; }
+        /* Contenedor que cambia de color real */
+        .app-shell { transition: background 0.3s ease, color 0.3s ease; min-height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; }
         
-        /* MODO CLARO: Negro sobre Blanco Papel */
-        .light-mode { background-color: #f8fafc; color: #000000; }
+        /* MODO CLARO: Negro Puro sobre Fondo Suave */
+        .light-mode { background-color: #f1f5f9; color: #000000; }
         .light-mode .card { background-color: #ffffff; border: 2px solid #e2e8f0; color: #000000; }
         .light-mode input, .light-mode textarea, .light-mode select { 
             background-color: #ffffff; border: 2px solid #cbd5e1; color: #000000 !important; 
         }
 
-        /* MODO OSCURO: Blanco sobre Azul Noche */
+        /* MODO OSCURO: Blanco Puro sobre Azul Noche */
         .dark-mode { background-color: #020617; color: #ffffff; }
         .dark-mode .card { background-color: #0f172a; border: 2px solid #1e293b; color: #ffffff; }
         .dark-mode input, .dark-mode textarea, .dark-mode select { 
             background-color: #020617; border: 2px solid #334155; color: #ffffff !important; 
         }
 
-        .card { border-radius: 2rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); }
-        .btn-cyan { background-color: #0891b2; color: #ffffff; font-weight: 900; }
+        .card { border-radius: 2.5rem; box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1); }
+        .btn-main { background-color: #0891b2; color: #ffffff; font-weight: 900; }
         
+        /* Desplegable de Opciones */
         .expand-enter-active, .expand-leave-active { transition: all 0.3s ease; max-height: 500px; overflow: hidden; }
         .expand-enter-from, .expand-leave-to { max-height: 0; opacity: 0; }
     </style>
@@ -42,42 +44,42 @@
 <body>
 
 <div id="app" v-cloak>
-    <div :class="['app-container', theme === 'dark' ? 'dark-mode' : 'light-mode']" class="p-4 flex flex-col items-center">
+    <div :class="['app-shell', theme === 'dark' ? 'dark-mode' : 'light-mode']" class="p-4">
         <div class="w-full max-w-md">
 
-            <!-- ALERTAS -->
+            <!-- ALERTAS VISUALES -->
             <transition name="fade">
-                <div v-if="alert.show" class="fixed top-6 left-0 right-0 z-[100] px-6 text-center">
-                    <div :class="alert.type === 'success' ? 'bg-green-600' : 'bg-red-600'" class="p-4 rounded-2xl shadow-2xl text-white font-black border-2 border-white/20">
+                <div v-if="alert.show" class="fixed top-6 left-0 right-0 z-[100] px-6">
+                    <div :class="alert.type === 'success' ? 'bg-green-600' : 'bg-red-600'" class="p-5 rounded-2xl shadow-2xl text-white font-black text-center border-2 border-white/20">
                         {{ alert.msg }}
                     </div>
                 </div>
             </transition>
 
-            <!-- 1. BIENVENIDA -->
-            <section v-if="view === 'onboarding'" class="min-h-[90vh] flex flex-col justify-center">
+            <!-- 1. PANTALLA INICIAL (ONBOARDING) -->
+            <section v-if="view === 'onboarding'" class="min-h-[85vh] flex flex-col justify-center animate-in fade-in">
                 <div class="text-center mb-10">
                     <img src="icon.png" class="w-24 h-24 mx-auto mb-4 drop-shadow-2xl">
-                    <h1 class="text-4xl font-black mb-2">¡Hola!</h1>
-                    <p class="font-bold opacity-60 uppercase text-xs">Configura tu negocio</p>
+                    <h1 class="text-4xl font-black mb-2">¡Bienvenido!</h1>
+                    <p class="font-bold opacity-60 uppercase text-xs tracking-widest">Configura tu perfil</p>
                 </div>
-                <div class="card p-8 space-y-6 shadow-xl">
+                <div class="card p-8 space-y-6">
                     <div v-if="onboardingStep === 1">
-                        <label class="block text-[10px] font-black uppercase mb-2">¿Cómo te llamas?</label>
+                        <label class="block text-[10px] font-black uppercase mb-2 ml-1">Tu Nombre o Negocio</label>
                         <input type="text" v-model="techData.name" placeholder="Ej: Juan Pérez" class="w-full p-5 rounded-2xl outline-none font-bold text-lg">
-                        <button @click="onboardingStep = 2" :disabled="!techData.name" class="w-full mt-6 btn-cyan p-5 rounded-2xl shadow-lg active:scale-95 transition-all">SIGUIENTE</button>
+                        <button @click="onboardingStep = 2" :disabled="!techData.name" class="w-full mt-6 btn-main p-5 rounded-2xl shadow-lg active:scale-95 transition-all">SIGUIENTE</button>
                     </div>
                     <div v-if="onboardingStep === 2">
-                        <label class="block text-[10px] font-black uppercase mb-2">Tu número de WhatsApp</label>
+                        <label class="block text-[10px] font-black uppercase mb-2 ml-1">Tu número de WhatsApp</label>
                         <input type="tel" v-model="techData.phone" placeholder="Ej: 300 123 4567" class="w-full p-5 rounded-2xl outline-none font-bold text-lg">
-                        <button @click="finishOnboarding" :disabled="!techData.phone" class="w-full mt-6 btn-cyan p-5 rounded-2xl shadow-lg active:scale-95 transition-all uppercase">¡EMPEZAR!</button>
+                        <button @click="finishOnboarding" :disabled="!techData.phone" class="w-full mt-6 btn-main p-5 rounded-2xl shadow-lg active:scale-95 transition-all uppercase">¡Empezar!</button>
                     </div>
                 </div>
             </section>
 
-            <!-- 2. MENÚ PRINCIPAL -->
-            <section v-if="view === 'main'" class="py-4">
-                <header class="flex justify-between items-center mb-10">
+            <!-- 2. PANTALLA PRINCIPAL -->
+            <section v-if="view === 'main'" class="py-4 animate-in slide-in-from-bottom-10">
+                <header class="flex justify-between items-center mb-10 px-2">
                     <div class="flex items-center gap-3">
                         <img :src="techData.logoBase64 || 'icon.png'" class="w-12 h-12 rounded-2xl object-contain bg-white p-1 border shadow-sm">
                         <h2 class="font-black text-xl truncate max-w-[180px]">{{ techData.name }}</h2>
@@ -85,16 +87,16 @@
                     <button @click="view = 'settings'" class="p-4 card shadow-md text-xl bg-white dark:bg-slate-900">⚙️</button>
                 </header>
 
-                <button @click="startNewQuote" class="w-full bg-cyan-600 text-white font-black py-16 rounded-[3rem] shadow-2xl shadow-cyan-900/40 flex flex-col items-center gap-3 mb-12 active:scale-95 transition-all">
-                    <span class="text-6xl">➕</span>
+                <button @click="startNewQuote" class="w-full bg-cyan-600 text-white font-black py-16 rounded-[3.5rem] shadow-2xl shadow-cyan-900/40 flex flex-col items-center gap-3 mb-12 active:scale-95 transition-all">
+                    <span class="text-6xl">📄</span>
                     <span class="tracking-widest uppercase text-xl">Nueva Cotización</span>
                 </button>
 
-                <h3 class="text-[10px] font-black uppercase opacity-40 mb-4 ml-4">Historial</h3>
+                <h3 class="text-[10px] font-black uppercase opacity-40 mb-4 ml-4 tracking-widest">Historial de Trabajos</h3>
                 <div v-if="history.length === 0" class="text-center py-16 opacity-30 font-black border-4 border-dotted rounded-[3rem] border-slate-300">
-                    No hay trabajos
+                    Aún no hay cotizaciones
                 </div>
-                <div v-for="(h, idx) in history" :key="idx" class="card p-6 mb-4 flex justify-between items-center transition-all active:scale-[0.98]">
+                <div v-for="(h, idx) in history" :key="idx" class="card p-6 mb-4 flex justify-between items-center active:scale-[0.98] transition-all">
                     <div>
                         <p class="font-black text-lg">{{ h.clientName }}</p>
                         <p class="text-[10px] font-bold text-cyan-600 uppercase">{{ h.date }} • {{ formatCOP(h.total) }}</p>
@@ -103,26 +105,28 @@
                 </div>
             </section>
 
-            <!-- 3. FORMULARIO DE COTIZACIÓN -->
-            <section v-if="view === 'quote'" class="pb-48">
+            <!-- 3. CREADOR DE COTIZACIÓN -->
+            <section v-if="view === 'quote'" class="pb-48 animate-in fade-in">
                 <div class="flex items-center gap-4 mb-8">
                     <button @click="view = 'main'" class="p-3 card font-black text-xs">⬅️ VOLVER</button>
-                    <h2 class="font-black text-xl">Presupuesto</h2>
+                    <h2 class="font-black text-xl">Crear Presupuesto</h2>
                 </div>
 
                 <div class="space-y-6">
+                    <!-- Cliente -->
                     <div class="card p-6 space-y-4">
                         <label class="block text-[10px] font-black uppercase opacity-40">Datos del Cliente</label>
-                        <input type="text" v-model="currentQuote.clientName" placeholder="Nombre completo" class="w-full p-4 rounded-xl outline-none font-bold">
-                        <input type="tel" v-model="currentQuote.clientPhone" placeholder="WhatsApp (Opcional)" class="w-full p-4 rounded-xl outline-none font-bold">
+                        <input type="text" v-model="currentQuote.clientName" placeholder="Nombre del cliente" class="w-full p-4 rounded-xl outline-none font-bold">
+                        <input type="tel" v-model="currentQuote.clientPhone" placeholder="Celular (Opcional)" class="w-full p-4 rounded-xl outline-none font-bold">
                     </div>
 
+                    <!-- Trabajos -->
                     <div class="space-y-4">
                         <div class="flex justify-between items-center px-4">
-                            <label class="text-[10px] font-black uppercase opacity-40 tracking-widest">Cobro por:</label>
+                            <label class="text-[10px] font-black uppercase opacity-40">Cobrar por:</label>
                             <div class="flex bg-slate-200 dark:bg-slate-800 rounded-lg p-1 shadow-inner">
-                                <button @click="currentQuote.billingMode = 'estandar'" :class="currentQuote.billingMode === 'estandar' ? 'bg-cyan-600 text-white' : 'opacity-50'" class="px-4 py-1.5 rounded-md text-[10px] font-black uppercase">Unidad</button>
-                                <button @click="currentQuote.billingMode = 'jornal'" :class="currentQuote.billingMode === 'jornal' ? 'bg-cyan-600 text-white' : 'opacity-50'" class="px-4 py-1.5 rounded-md text-[10px] font-black uppercase">Jornal</button>
+                                <button @click="currentQuote.billingMode = 'estandar'" :class="currentQuote.billingMode === 'estandar' ? 'bg-cyan-600 text-white shadow-md' : 'opacity-50'" class="px-4 py-1.5 rounded-md text-[10px] font-black uppercase">Unidad</button>
+                                <button @click="currentQuote.billingMode = 'jornal'" :class="currentQuote.billingMode === 'jornal' ? 'bg-cyan-600 text-white shadow-md' : 'opacity-50'" class="px-4 py-1.5 rounded-md text-[10px] font-black uppercase">Jornal</button>
                             </div>
                         </div>
 
@@ -130,33 +134,33 @@
                             <button v-if="currentQuote.items.length > 1" @click="removeItem(idx)" class="absolute -top-2 -right-2 bg-red-600 text-white w-9 h-9 rounded-full font-black shadow-lg">✕</button>
                             
                             <label class="text-[10px] font-black text-cyan-600 uppercase mb-1 block">
-                                {{ currentQuote.billingMode === 'estandar' ? 'Producto o Servicio' : 'Descripción del Trabajo' }}
+                                {{ currentQuote.billingMode === 'estandar' ? '¿Qué producto o servicio es?' : 'Descripción del Trabajo Realizado' }}
                             </label>
-                            <textarea v-model="item.desc" placeholder="Ej: Pintar fachada..." class="w-full border-b-2 mb-4 p-2 font-bold text-sm outline-none bg-transparent" rows="1"></textarea>
+                            <textarea v-model="item.desc" placeholder="Ej: Pintar alcoba principal..." class="w-full border-b-2 mb-4 p-2 font-bold text-sm outline-none bg-transparent" rows="1"></textarea>
                             
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label class="text-[10px] font-black opacity-40 uppercase mb-1 block">{{ currentQuote.billingMode === 'estandar' ? 'Cantidad' : 'Días/Horas' }}</label>
-                                    <input type="number" v-model.number="item.qty" class="w-full p-4 rounded-xl font-black text-center">
+                                    <input type="number" v-model.number="item.qty" class="w-full p-4 rounded-xl font-black text-center shadow-sm">
                                 </div>
                                 <div>
                                     <label class="text-[10px] font-black opacity-40 uppercase mb-1 block">{{ currentQuote.billingMode === 'estandar' ? 'Precio c/u' : 'Valor x Día' }}</label>
-                                    <input type="number" v-model.number="item.price" class="w-full p-4 rounded-xl font-black text-right text-cyan-600">
+                                    <input type="number" v-model.number="item.price" class="w-full p-4 rounded-xl font-black text-right text-cyan-600 shadow-sm">
                                 </div>
                             </div>
                         </div>
 
-                        <button @click="addItem" class="w-full py-6 rounded-[2.5rem] border-2 border-dashed border-slate-400 font-black text-xs uppercase opacity-60">+ Añadir concepto</button>
+                        <button @click="addItem" class="w-full py-6 rounded-[2.5rem] border-2 border-dashed border-slate-400 font-black text-xs uppercase opacity-50">+ Añadir concepto</button>
                     </div>
 
-                    <!-- OPCIONES DESPLEGABLES -->
-                    <div class="card overflow-hidden shadow-lg">
-                        <button @click="ui.showQuoteOptions = !ui.showQuoteOptions" class="w-full p-6 flex justify-between items-center font-black text-xs uppercase tracking-widest opacity-70">
+                    <!-- DESPLEGABLE: Opciones de Cotización -->
+                    <div class="card overflow-hidden">
+                        <button @click="ui.showQuoteOptions = !ui.showQuoteOptions" class="w-full p-6 flex justify-between items-center font-black text-xs uppercase tracking-widest opacity-60">
                             <span>⚙️ Opciones de Cotización</span>
                             <span>{{ ui.showQuoteOptions ? '▲' : '▼' }}</span>
                         </button>
                         <transition name="expand">
-                            <div v-if="ui.showQuoteOptions" class="p-6 pt-0 space-y-5 border-t border-slate-100 dark:border-slate-800">
+                            <div v-if="ui.showQuoteOptions" class="p-6 pt-0 space-y-4 border-t border-slate-100 dark:border-slate-800 animate-in fade-in">
                                 <div class="flex items-center justify-between font-black text-xs mt-4">
                                     <span>Vigencia:</span>
                                     <div class="flex gap-2">
@@ -180,6 +184,7 @@
                     </div>
                 </div>
 
+                <!-- BARRA TOTAL INFERIOR -->
                 <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-6 bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl border-t-2 border-cyan-600/20 z-50 rounded-t-[3rem] shadow-2xl">
                     <div class="flex justify-between items-center mb-5 px-4 font-black">
                         <span class="opacity-40 text-[10px] tracking-widest uppercase">Total a cobrar</span>
@@ -192,16 +197,16 @@
             </section>
 
             <!-- 4. PANTALLA DE AJUSTES -->
-            <section v-if="view === 'settings'" class="py-4">
+            <section v-if="view === 'settings'" class="py-4 animate-in slide-in-from-right">
                 <div class="flex items-center gap-4 mb-10">
                     <button @click="view = 'main'" class="p-3 card font-black text-xs">⬅️ VOLVER</button>
-                    <h2 class="font-black text-xl">Ajustes</h2>
+                    <h2 class="font-black text-xl">Configuración</h2>
                 </div>
 
                 <div class="space-y-6 pb-24">
                     <div class="card p-8 space-y-6">
-                        <label class="block text-[10px] font-black opacity-40 uppercase tracking-widest">Datos del emisor</label>
-                        <input type="text" v-model="techData.name" @input="saveSettings" placeholder="Nombre comercial" class="w-full p-4 rounded-xl outline-none font-bold">
+                        <label class="block text-[10px] font-black opacity-40 uppercase tracking-widest">Datos de tu negocio</label>
+                        <input type="text" v-model="techData.name" @input="saveSettings" placeholder="Nombre del negocio" class="w-full p-4 rounded-xl outline-none font-bold">
                         <input type="tel" v-model="techData.phone" @input="saveSettings" placeholder="Tu Teléfono" class="w-full p-4 rounded-xl outline-none font-bold">
                         
                         <label class="block text-[10px] font-black opacity-40 uppercase tracking-widest pt-4">Tu Logotipo</label>
@@ -210,16 +215,17 @@
                                 Subir Imagen
                                 <input type="file" @change="handleLogoUpload" class="hidden" accept="image/*">
                             </label>
-                            <div v-if="techData.logoBase64" class="w-20 h-20 bg-white rounded-2xl p-1 shadow-inner border flex items-center justify-center">
+                            <div v-if="techData.logoBase64" class="w-16 h-16 bg-white rounded-2xl p-1 shadow-inner border flex items-center justify-center">
                                 <img :src="techData.logoBase64" class="max-w-full max-h-full object-contain rounded-lg">
                             </div>
                         </div>
                     </div>
 
+                    <!-- AJUSTES PREDETERMINADOS -->
                     <div class="card p-8 space-y-5">
-                        <label class="block text-[10px] font-black opacity-40 uppercase tracking-widest">Preferencias (Predeterminadas)</label>
+                        <label class="block text-[10px] font-black opacity-40 uppercase tracking-widest">Ajustes del PDF (Siempre así)</label>
                         <div class="flex items-center justify-between font-bold text-sm">
-                            <span>Mostrar logotipo</span>
+                            <span>Mostrar mi logo</span>
                             <input type="checkbox" v-model="techData.defaultShowLogo" @change="saveSettings" class="w-7 h-7 accent-cyan-600">
                         </div>
                         <div class="flex items-center justify-between font-bold text-sm">
@@ -227,21 +233,21 @@
                             <input type="checkbox" v-model="techData.defaultShowTechInfo" @change="saveSettings" class="w-7 h-7 accent-cyan-600">
                         </div>
                         <div class="flex items-center justify-between font-bold text-sm">
-                            <span>Incluir garantía</span>
+                            <span>Incluir mi garantía</span>
                             <input type="checkbox" v-model="techData.defaultApplyWarranty" @change="saveSettings" class="w-7 h-7 accent-cyan-600">
                         </div>
-                        <label class="block text-[10px] font-black opacity-40 uppercase tracking-widest pt-4">Texto de Garantía</label>
+                        <label class="block text-[10px] font-black opacity-40 uppercase tracking-widest pt-4">Garantía Estándar</label>
                         <textarea v-model="techData.warranty" @input="saveSettings" rows="3" class="w-full p-4 rounded-xl outline-none font-bold text-sm bg-transparent"></textarea>
                     </div>
 
                     <div class="card p-6 flex items-center justify-between">
-                        <span class="font-black text-xs uppercase opacity-40 tracking-widest">Tema de la App</span>
-                        <button @click="toggleTheme" class="bg-cyan-600 text-white px-8 py-3 rounded-xl font-black text-xs shadow-lg uppercase">
-                            {{ theme === 'dark' ? '☀️ CLARO' : '🌙 OSCURO' }}
+                        <span class="font-black text-xs uppercase opacity-40 tracking-widest">Tema Visual</span>
+                        <button @click="toggleTheme" class="bg-cyan-600 text-white px-8 py-3 rounded-xl font-black text-xs shadow-lg uppercase tracking-widest transition-all">
+                            {{ theme === 'dark' ? '☀️ Modo Claro' : '🌙 Modo Oscuro' }}
                         </button>
                     </div>
 
-                    <button @click="resetApp" class="w-full p-6 text-red-600 font-black text-[10px] uppercase opacity-30 tracking-[0.4em]">Restablecer App</button>
+                    <button @click="resetApp" class="w-full p-4 text-red-600 font-black text-[10px] uppercase opacity-30 tracking-[0.3em]">Restablecer App</button>
                 </div>
             </section>
 
@@ -261,7 +267,7 @@ createApp({
             history: [],
             techData: { 
                 name: '', phone: '', logoBase64: '', 
-                warranty: 'Garantía de 30 días calendario por mano de obra.',
+                warranty: 'Garantía de 30 días calendario contados a partir de la entrega.',
                 defaultShowLogo: true, defaultShowTechInfo: true, defaultApplyWarranty: true
             },
             currentQuote: { clientName: '', clientPhone: '', validityDays: 7, billingMode: 'estandar', showLogo: true, showTechInfo: true, applyWarranty: true, items: [{ desc: '', qty: 1, price: null }] }
@@ -269,9 +275,9 @@ createApp({
     },
     computed: { totalQuote() { return this.currentQuote.items.reduce((acc, i) => acc + (i.qty * (i.price || 0)), 0); } },
     mounted() {
-        const c = localStorage.getItem('cp_config_final');
-        const h = localStorage.getItem('cp_history_final');
-        const t = localStorage.getItem('cp_theme_final');
+        const c = localStorage.getItem('cp_v7_config');
+        const h = localStorage.getItem('cp_v7_history');
+        const t = localStorage.getItem('cp_v7_theme');
         if (t) this.theme = t;
         if (c) { this.techData = JSON.parse(c); this.view = 'main'; }
         if (h) this.history = JSON.parse(h);
@@ -279,9 +285,9 @@ createApp({
     },
     methods: {
         showAlert(msg, type = 'success') { this.alert = { show: true, msg, type }; setTimeout(() => this.alert.show = false, 3000); },
-        toggleTheme() { this.theme = this.theme === 'dark' ? 'light' : 'dark'; localStorage.setItem('cp_theme_final', this.theme); },
-        saveSettings() { localStorage.setItem('cp_config_final', JSON.stringify(this.techData)); },
-        finishOnboarding() { this.saveSettings(); this.showAlert('¡Configuración lista!'); this.view = 'main'; },
+        toggleTheme() { this.theme = this.theme === 'dark' ? 'light' : 'dark'; localStorage.setItem('cp_v7_theme', this.theme); },
+        saveSettings() { localStorage.setItem('cp_v7_config', JSON.stringify(this.techData)); },
+        finishOnboarding() { this.saveSettings(); this.showAlert('¡Configuración guardada!'); this.view = 'main'; },
         startNewQuote() { 
             this.currentQuote = { 
                 clientName: '', clientPhone: '', validityDays: 7, billingMode: 'estandar', 
@@ -298,7 +304,7 @@ createApp({
         formatCOP(v) { return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(v); },
         handleLogoUpload(e) {
             const f = e.target.files[0]; if (!f) return;
-            const r = new FileReader(); r.onload = (ev) => { this.techData.logoBase64 = ev.target.result; this.saveSettings(); this.showAlert('Logo actualizado'); };
+            const r = new FileReader(); r.onload = (ev) => { this.techData.logoBase64 = ev.target.result; this.saveSettings(); this.showAlert('Imagen cargada'); };
             r.readAsDataURL(f);
         },
         async generateAndSend() {
@@ -334,12 +340,12 @@ createApp({
                 
                 const exp = new Date(); exp.setDate(exp.getDate() + this.currentQuote.validityDays);
                 doc.setFont("helvetica", "normal"); doc.setTextColor(100);
-                doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 120, y + 5);
+                doc.text(`Emisión: ${new Date().toLocaleDateString()}`, 120, y + 5);
                 doc.setTextColor(200, 0, 0); doc.text(`Vence: ${exp.toLocaleDateString()}`, 120, y + 10);
                 y += 25;
 
                 const isJ = this.currentQuote.billingMode === 'jornal';
-                const h = [[isJ ? 'Descripción del Trabajo' : 'Producto o Servicio', isJ ? 'Días/Hrs' : 'Cant.', isJ ? 'Precio x Día' : 'Precio Unit.', 'Subtotal']];
+                const h = [[isJ ? 'Descripción del Trabajo' : 'Producto o Servicio', isJ ? 'Días/Hrs' : 'Cant.', isJ ? 'Valor x Día' : 'Precio Unit.', 'Subtotal']];
                 const r = this.currentQuote.items.map(i => [i.desc || 'Servicio', i.qty, this.formatCOP(i.price || 0), this.formatCOP(i.qty * (i.price || 0))]);
 
                 doc.autoTable({ 
@@ -358,18 +364,18 @@ createApp({
                 }
 
                 const pdfBlob = doc.output('blob');
-                const file = new File([pdfBlob], `Cotizacion.pdf`, { type: 'application/pdf' });
+                const file = new File([pdfBlob], `Cotización.pdf`, { type: 'application/pdf' });
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
                     await navigator.share({ files: [file], title: 'Presupuesto' });
                 } else { doc.save(`Cotizacion_${this.currentQuote.clientName}.pdf`); }
 
                 this.history.unshift({ clientName: this.currentQuote.clientName, total: this.totalQuote, date: new Date().toLocaleDateString() });
                 if(this.history.length > 10) this.history.pop();
-                localStorage.setItem('cp_history_final', JSON.stringify(this.history));
+                localStorage.setItem('cp_v7_history', JSON.stringify(this.history));
                 this.view = 'main'; this.showAlert('¡Cotización enviada!');
             } catch (err) { this.showAlert('Error al crear PDF', 'error'); } finally { this.isGenerating = false; }
         },
-        deleteHistory(idx) { this.history.splice(idx, 1); localStorage.setItem('cp_history_final', JSON.stringify(this.history)); },
+        deleteHistory(idx) { this.history.splice(idx, 1); localStorage.setItem('cp_v7_history', JSON.stringify(this.history)); },
         resetApp() { if(confirm("¿Borrar todo?")) { localStorage.clear(); window.location.reload(); } }
     }
 }).mount('#app');
