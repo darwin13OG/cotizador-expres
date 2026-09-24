@@ -1,0 +1,8 @@
+{
+  "name": "Cotizador Pro",
+  "description": "Herramienta rápida para generar cotizaciones de servicios en PDF y compartirlas directamente por WhatsApp.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
