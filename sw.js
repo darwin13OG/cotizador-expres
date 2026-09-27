@@ -1,8 +1,11 @@
 // sw.js
-const CACHE_NAME = 'cotizador-expres-cache-v1';
+const CACHE_NAME = 'cotizador-expres-cache-v2';
 const ASSETS_TO_CACHE = [
   './', // El archivo HTML principal
-  'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap',
+  './favicon.png',
+  './favicon-192.png',
+  './favicon-32.png',
+  'https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap',
   'https://cdn.tailwindcss.com',
   'https://unpkg.com/vue@3/dist/vue.global.js',
   'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
