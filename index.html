@@ -62,286 +62,489 @@
     
     <style>
         [v-cloak] { display: none; }
-        body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
         
-        /* Contenedor que cambia de color real */
-        .app-shell { transition: background 0.3s ease, color 0.3s ease; min-height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; }
+        /* Quitar barra blanca / scrollbar de navegación lateral en todos los navegadores */
+        html, body { 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            overflow-x: hidden;
+            scrollbar-width: none !important; /* Firefox */
+            -ms-overflow-style: none !important; /* IE y Edge */
+        }
+        html::-webkit-scrollbar, 
+        body::-webkit-scrollbar, 
+        *::-webkit-scrollbar { 
+            display: none !important; 
+            width: 0 !important; 
+            height: 0 !important; 
+        }
         
-        /* MODO CLARO: Negro Puro sobre Fondo Suave */
-        .light-mode { background-color: #f1f5f9; color: #000000; }
-        .light-mode .card { background-color: #ffffff; border: 2px solid #e2e8f0; color: #000000; }
+        /* Contenedor y temas */
+        .app-shell { transition: background 0.2s ease, color 0.2s ease; min-height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; }
+        
+        html.light-mode, body.light-mode, .light-mode { background-color: #f8fafc; color: #0f172a; }
+        .light-mode .card { background-color: #ffffff; border: 1px solid #e2e8f0; color: #0f172a; }
         .light-mode input, .light-mode textarea, .light-mode select { 
-            background-color: #ffffff; border: 2px solid #cbd5e1; color: #000000 !important; 
+            background-color: #ffffff; border: 1.5px solid #cbd5e1; color: #0f172a !important; 
         }
 
-        /* MODO OSCURO: Blanco Puro sobre Azul Noche */
-        .dark-mode { background-color: #020617; color: #ffffff; }
-        .dark-mode .card { background-color: #0f172a; border: 2px solid #1e293b; color: #ffffff; }
+        html.dark-mode, body.dark-mode, .dark-mode { background-color: #020617; color: #f8fafc; }
+        .dark-mode .card { background-color: #0f172a; border: 1px solid #1e293b; color: #f8fafc; }
         .dark-mode input, .dark-mode textarea, .dark-mode select { 
-            background-color: #020617; border: 2px solid #334155; color: #ffffff !important; 
+            background-color: #090d16; border: 1.5px solid #334155; color: #f8fafc !important; 
         }
 
-        .card { border-radius: 2.5rem; box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1); }
-        .btn-main { background-color: #0891b2; color: #ffffff; font-weight: 900; }
+        .card { border-radius: 1.25rem; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); }
+        .btn-main { background-color: #0891b2; color: #ffffff; font-weight: 800; }
+        .btn-wa { background-color: #059669; color: #ffffff; font-weight: 800; }
         
-        /* Desplegable de Opciones */
-        .expand-enter-active, .expand-leave-active { transition: all 0.3s ease; max-height: 500px; overflow: hidden; }
+        .expand-enter-active, .expand-leave-active { transition: all 0.2s ease; max-height: 500px; overflow: hidden; }
         .expand-enter-from, .expand-leave-to { max-height: 0; opacity: 0; }
     </style>
 </head>
 <body>
 
 <div id="app" v-cloak>
-    <div :class="['app-shell', theme === 'dark' ? 'dark-mode' : 'light-mode']" class="p-4">
-        <div class="w-full max-w-md">
+    <div :class="['app-shell', theme === 'dark' ? 'dark-mode' : 'light-mode']" class="p-4 md:p-8">
+        <div class="w-full max-w-2xl mx-auto">
 
-            <!-- ALERTAS VISUALES -->
+            <!-- ALERTAS -->
             <transition name="fade">
-                <div v-if="alert.show" class="fixed top-6 left-0 right-0 z-[100] px-6">
-                    <div :class="alert.type === 'success' ? 'bg-green-600' : 'bg-red-600'" class="p-5 rounded-2xl shadow-2xl text-white font-black text-center border-2 border-white/20">
+                <div v-if="alert.show" class="fixed top-6 left-0 right-0 z-[100] px-4 max-w-sm mx-auto">
+                    <div :class="alert.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'" class="p-3.5 rounded-xl shadow-xl text-white font-bold text-center text-xs">
                         {{ alert.msg }}
                     </div>
                 </div>
             </transition>
 
-            <!-- 1. PANTALLA INICIAL (ONBOARDING) -->
-            <section v-if="view === 'onboarding'" class="min-h-[85vh] flex flex-col justify-center animate-in fade-in">
-                <div class="text-center mb-10">
-                    <img src="favicon.png" class="w-24 h-24 mx-auto mb-4 drop-shadow-2xl rounded-3xl">
-                    <h1 class="text-4xl font-black mb-2">¡Bienvenido!</h1>
-                    <p class="font-bold opacity-60 uppercase text-xs tracking-widest">Configura tu perfil</p>
+            <!-- 1. ONBOARDING -->
+            <section v-if="view === 'onboarding'" class="min-h-[80vh] flex flex-col justify-center animate-in fade-in">
+                <div class="text-center mb-8">
+                    <img src="favicon.png" class="w-20 h-20 mx-auto mb-3 rounded-2xl">
+                    <h1 class="text-3xl font-black">¡Bienvenido!</h1>
+                    <p class="font-bold opacity-60 uppercase text-[11px] tracking-widest">Configura tu perfil</p>
                 </div>
-                <div class="card p-8 space-y-6">
+                <div class="card p-6 space-y-4">
                     <div v-if="onboardingStep === 1">
-                        <label class="block text-[10px] font-black uppercase mb-2 ml-1">Tu Nombre o Negocio</label>
-                        <input type="text" v-model="techData.name" placeholder="Ej: Juan Pérez" class="w-full p-5 rounded-2xl outline-none font-bold text-lg">
-                        <button @click="onboardingStep = 2" :disabled="!techData.name" class="w-full mt-6 btn-main p-5 rounded-2xl shadow-lg active:scale-95 transition-all">SIGUIENTE</button>
+                        <label class="block text-[10px] font-black uppercase mb-1.5 opacity-60">Tu Nombre o Negocio</label>
+                        <input type="text" v-model="techData.name" placeholder="Ej: Juan Pérez" class="w-full p-3.5 rounded-xl outline-none font-bold text-base">
+                        <button @click="onboardingStep = 2" :disabled="!techData.name" class="w-full mt-4 btn-main p-3.5 rounded-xl shadow active:scale-95 transition-all text-xs uppercase">Siguiente</button>
                     </div>
                     <div v-if="onboardingStep === 2">
-                        <label class="block text-[10px] font-black uppercase mb-2 ml-1">Tu número de WhatsApp</label>
-                        <input type="tel" v-model="techData.phone" placeholder="Ej: 300 123 4567" class="w-full p-5 rounded-2xl outline-none font-bold text-lg">
-                        <button @click="finishOnboarding" :disabled="!techData.phone" class="w-full mt-6 btn-main p-5 rounded-2xl shadow-lg active:scale-95 transition-all uppercase">¡Empezar!</button>
+                        <label class="block text-[10px] font-black uppercase mb-1.5 opacity-60">Tu WhatsApp (cualquier país)</label>
+                        <input type="tel" v-model="techData.phone" placeholder="Ej: +57 300 123 4567, +52..., etc." class="w-full p-3.5 rounded-xl outline-none font-bold text-base">
+                        <button @click="finishOnboarding" :disabled="!techData.phone" class="w-full mt-4 btn-main p-3.5 rounded-xl shadow active:scale-95 transition-all text-xs uppercase">¡Empezar!</button>
                     </div>
                 </div>
             </section>
 
             <!-- 2. PANTALLA PRINCIPAL -->
-            <section v-if="view === 'main'" class="py-4 animate-in slide-in-from-bottom-10">
-                <header class="flex justify-between items-center mb-10 px-2">
+            <section v-if="view === 'main'" class="py-2 animate-in slide-in-from-bottom-4 space-y-6">
+                <!-- CABECERA -->
+                <header class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
                     <div class="flex items-center gap-3">
-                        <!-- Si el cliente subió su logo, se muestra; si no, un avatar con inicial o icono de negocio -->
-                        <div v-if="techData.logoBase64" class="w-12 h-12 rounded-2xl bg-white p-1 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-center overflow-hidden">
-                            <img :src="techData.logoBase64" class="max-w-full max-h-full object-contain rounded-lg" alt="Logo de tu negocio">
+                        <div v-if="techData.logoBase64" class="w-12 h-12 rounded-xl bg-white p-1 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-center overflow-hidden">
+                            <img :src="techData.logoBase64" class="max-w-full max-h-full object-contain" alt="Logo">
                         </div>
-                        <div v-else class="w-12 h-12 rounded-2xl bg-cyan-600/10 dark:bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30 flex items-center justify-center font-black text-lg shadow-sm">
-                            <span v-if="techData.name">{{ techData.name.trim().charAt(0).toUpperCase() }}</span>
-                            <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                        <div v-else class="w-12 h-12 rounded-xl bg-cyan-600/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 flex items-center justify-center font-black text-lg">
+                            <span>{{ techData.name ? techData.name.trim().charAt(0).toUpperCase() : 'C' }}</span>
                         </div>
                         <div>
-                            <h2 class="font-black text-xl truncate max-w-[190px]">{{ techData.name || 'Mi Negocio' }}</h2>
-                            <p v-if="techData.phone" class="text-[10px] font-bold opacity-60">{{ techData.phone }}</p>
+                            <h2 class="font-black text-xl tracking-tight truncate max-w-[200px] sm:max-w-xs">{{ techData.name || 'Mi Negocio' }}</h2>
+                            <p v-if="techData.phone" class="text-xs font-semibold opacity-60">{{ techData.phone }}</p>
                         </div>
                     </div>
-                    <button @click="view = 'settings'" title="Configuración" class="p-3.5 card shadow-md hover:border-cyan-500 text-slate-700 dark:text-slate-200 transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    </button>
+
+                    <div class="flex items-center gap-2">
+                        <button @click="toggleTheme" title="Tema" class="p-2.5 card hover:border-cyan-500 transition-colors">
+                            <svg v-if="theme === 'dark'" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                            <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                        </button>
+                        <button @click="view = 'settings'" title="Ajustes" class="p-2.5 card hover:border-cyan-500 transition-colors flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            <span class="text-xs font-bold uppercase">Ajustes</span>
+                        </button>
+                    </div>
                 </header>
 
-                <button @click="startNewQuote" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-black py-12 rounded-[2.5rem] shadow-2xl shadow-cyan-900/40 flex flex-col items-center gap-3 mb-10 active:scale-95 transition-all">
-                    <div class="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center">
-                        <svg class="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 13h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                    </div>
-                    <span class="tracking-widest uppercase text-lg">Nueva Cotización</span>
+                <!-- BOTÓN PRINCIPAL NUEVA COTIZACIÓN -->
+                <button @click="startNewQuote" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-black py-8 px-6 rounded-2xl shadow-xl shadow-cyan-900/20 flex flex-col items-center justify-center gap-2 active:scale-95 transition-all">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 13h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <span class="tracking-widest uppercase text-base">Nueva Cotización</span>
                 </button>
 
-                <h3 class="text-[10px] font-black uppercase opacity-40 mb-4 ml-4 tracking-widest">Historial de Trabajos</h3>
-                <div v-if="history.length === 0" class="text-center py-16 opacity-30 font-black border-4 border-dotted rounded-[3rem] border-slate-300">
-                    Aún no hay cotizaciones
-                </div>
-                <div v-for="(h, idx) in history" :key="idx" class="card p-5 mb-4 flex justify-between items-center active:scale-[0.98] transition-all">
-                    <div>
-                        <p class="font-black text-lg">{{ h.clientName }}</p>
-                        <p class="text-[10px] font-bold text-cyan-600 uppercase">{{ h.date }} • {{ formatCOP(h.total) }}</p>
+                <!-- HISTORIAL -->
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between px-1">
+                        <h3 class="text-xs font-black uppercase opacity-60 tracking-wider">Historial de Trabajos</h3>
+                        <span class="text-xs font-bold opacity-40">{{ history.length }} guardadas</span>
                     </div>
-                    <button @click="deleteHistory(idx)" title="Eliminar" class="p-2.5 rounded-xl hover:bg-red-500/10 text-red-500 hover:text-red-600 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                    </button>
+
+                    <div v-if="history.length === 0" class="text-center py-12 opacity-40 font-bold border-2 border-dashed rounded-2xl border-slate-300 dark:border-slate-800 text-xs">
+                        Aún no tienes cotizaciones guardadas
+                    </div>
+
+                    <div v-for="(h, idx) in history" :key="h.id || idx" class="card p-4 flex items-center justify-between gap-3">
+                        <div class="space-y-0.5 truncate">
+                            <h4 class="font-black text-base truncate">{{ h.clientName }}</h4>
+                            <p class="text-xs font-bold text-cyan-600 dark:text-cyan-400">
+                                {{ h.date }} • {{ formatCurrency(h.total, h.currency) }}
+                            </p>
+                        </div>
+
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <button v-if="h.clientPhone" @click="openWhatsAppForHistory(h)" title="Enviar WhatsApp" class="p-2 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold text-xs flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.356.101.174.449.741.964 1.2.662.591 1.221.774 1.394.861.174.086.275.072.376-.044.101-.116.433-.506.549-.679.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
+                                <span>WhatsApp</span>
+                            </button>
+
+                            <button @click="reDownloadHistoryPdf(h)" title="Descargar PDF" class="p-2 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 font-bold text-xs flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                <span>PDF</span>
+                            </button>
+
+                            <button @click="deleteHistory(idx)" title="Eliminar" class="p-2 rounded-lg text-red-500 hover:bg-red-500/10 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </section>
 
             <!-- 3. CREADOR DE COTIZACIÓN -->
-            <section v-if="view === 'quote'" class="pb-48 animate-in fade-in">
-                <div class="flex items-center gap-4 mb-8">
-                    <button @click="view = 'main'" class="px-4 py-2.5 card font-black text-xs flex items-center gap-1.5 hover:border-cyan-500 transition-colors">
+            <section v-if="view === 'quote'" class="py-2 animate-in fade-in space-y-5">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+                    <button @click="view = 'main'" class="px-3.5 py-2 card font-black text-xs flex items-center gap-1.5 hover:border-cyan-500 transition-colors">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
                         <span>VOLVER</span>
                     </button>
-                    <h2 class="font-black text-xl">Crear Presupuesto</h2>
+                    <h2 class="font-black text-lg sm:text-xl">Crear Presupuesto</h2>
+                    <div class="w-12"></div>
                 </div>
 
-                <div class="space-y-6">
-                    <!-- Cliente -->
-                    <div class="card p-6 space-y-4">
-                        <label class="block text-[10px] font-black uppercase opacity-40">Datos del Cliente</label>
-                        <input type="text" v-model="currentQuote.clientName" placeholder="Nombre del cliente" class="w-full p-4 rounded-xl outline-none font-bold">
-                        <input type="tel" v-model="currentQuote.clientPhone" placeholder="Celular (Opcional)" class="w-full p-4 rounded-xl outline-none font-bold">
+                <!-- SELECTOR DE MONEDA Y TIPO DE COBRO -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="card p-3 flex items-center justify-between">
+                        <label class="text-[10px] font-black uppercase opacity-60">Moneda:</label>
+                        <select v-model="currentQuote.currency" class="p-1.5 rounded-lg font-bold text-xs outline-none">
+                            <option value="COP">COP ($) Colombia</option>
+                            <option value="USD">USD ($) Dólar</option>
+                            <option value="EUR">EUR (€) Euro</option>
+                            <option value="MXN">MXN ($) México</option>
+                            <option value="ARS">ARS ($) Argentina</option>
+                            <option value="CLP">CLP ($) Chile</option>
+                            <option value="PEN">PEN (S/) Perú</option>
+                            <option value="BOB">BOB (Bs) Bolivia</option>
+                            <option value="UYU">UYU ($) Uruguay</option>
+                            <option value="PYG">PYG (₲) Paraguay</option>
+                            <option value="CRC">CRC (₡) Costa Rica</option>
+                            <option value="DOP">DOP (RD$) Dominicana</option>
+                            <option value="GTQ">GTQ (Q) Guatemala</option>
+                            <option value="HNL">HNL (L) Honduras</option>
+                            <option value="NIO">NIO (C$) Nicaragua</option>
+                            <option value="BRL">BRL (R$) Brasil</option>
+                        </select>
                     </div>
 
-                    <!-- Trabajos -->
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center px-4">
-                            <label class="text-[10px] font-black uppercase opacity-40">Cobrar por:</label>
-                            <div class="flex bg-slate-200 dark:bg-slate-800 rounded-lg p-1 shadow-inner">
-                                <button @click="currentQuote.billingMode = 'estandar'" :class="currentQuote.billingMode === 'estandar' ? 'bg-cyan-600 text-white shadow-md' : 'opacity-50'" class="px-4 py-1.5 rounded-md text-[10px] font-black uppercase">Unidad</button>
-                                <button @click="currentQuote.billingMode = 'jornal'" :class="currentQuote.billingMode === 'jornal' ? 'bg-cyan-600 text-white shadow-md' : 'opacity-50'" class="px-4 py-1.5 rounded-md text-[10px] font-black uppercase">Jornal</button>
-                            </div>
+                    <div class="card p-3 flex items-center justify-between">
+                        <label class="text-[10px] font-black uppercase opacity-60">Cobrar por:</label>
+                        <div class="flex bg-slate-200 dark:bg-slate-800 rounded-lg p-1">
+                            <button @click="currentQuote.billingMode = 'estandar'" :class="currentQuote.billingMode === 'estandar' ? 'bg-cyan-600 text-white shadow' : 'opacity-60'" class="px-3 py-1 rounded-md text-[10px] font-black uppercase">Unidad</button>
+                            <button @click="currentQuote.billingMode = 'jornal'" :class="currentQuote.billingMode === 'jornal' ? 'bg-cyan-600 text-white shadow' : 'opacity-60'" class="px-3 py-1 rounded-md text-[10px] font-black uppercase">Jornal</button>
                         </div>
+                    </div>
+                </div>
 
-                        <div v-for="(item, idx) in currentQuote.items" :key="idx" class="card p-6 relative">
-                            <button v-if="currentQuote.items.length > 1" @click="removeItem(idx)" class="absolute -top-2 -right-2 bg-red-600 text-white w-8 h-8 rounded-full font-black shadow-lg flex items-center justify-center hover:scale-105 transition-transform" title="Eliminar ítem">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
-                            </button>
-                            
-                            <label class="text-[10px] font-black text-cyan-600 uppercase mb-1 block">
-                                {{ currentQuote.billingMode === 'estandar' ? '¿Qué producto o servicio es?' : 'Descripción del Trabajo Realizado' }}
+                <!-- DATOS DEL CLIENTE -->
+                <div class="card p-5 space-y-3">
+                    <label class="block text-[10px] font-black uppercase opacity-60">Datos del Cliente</label>
+                    <input type="text" v-model="currentQuote.clientName" placeholder="Nombre del cliente *" class="w-full p-3.5 rounded-xl outline-none font-bold text-sm">
+                    <input type="tel" v-model="currentQuote.clientPhone" placeholder="Teléfono WhatsApp (cualquier país: ej: +57 300..., +52..., etc.)" class="w-full p-3.5 rounded-xl outline-none font-bold text-sm">
+                </div>
+
+                <!-- CONCEPTOS / ÍTEMS CON PUNTO DE MIL AUTOMÁTICO -->
+                <div class="space-y-3">
+                    <div v-for="(item, idx) in currentQuote.items" :key="idx" class="card p-5 relative border-l-4 border-l-cyan-600 space-y-3">
+                        <button v-if="currentQuote.items.length > 1" @click="removeItem(idx)" class="absolute -top-2 -right-2 bg-red-600 text-white w-7 h-7 rounded-full font-black shadow flex items-center justify-center hover:scale-105 transition-transform" title="Eliminar concepto">
+                            ✕
+                        </button>
+
+                        <div class="flex justify-between items-center">
+                            <label class="text-[10px] font-black text-cyan-600 uppercase">
+                                {{ currentQuote.billingMode === 'estandar' ? 'Concepto #' + (idx + 1) : 'Trabajo #' + (idx + 1) }}
                             </label>
-                            <textarea v-model="item.desc" placeholder="Ej: Pintar alcoba principal..." class="w-full border-b-2 mb-4 p-2 font-bold text-sm outline-none bg-transparent" rows="1"></textarea>
-                            
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="text-[10px] font-black opacity-40 uppercase mb-1 block">{{ currentQuote.billingMode === 'estandar' ? 'Cantidad' : 'Días/Horas' }}</label>
-                                    <input type="number" v-model.number="item.qty" class="w-full p-4 rounded-xl font-black text-center shadow-sm">
-                                </div>
-                                <div>
-                                    <label class="text-[10px] font-black opacity-40 uppercase mb-1 block">{{ currentQuote.billingMode === 'estandar' ? 'Precio c/u' : 'Valor x Día' }}</label>
-                                    <input type="number" v-model.number="item.price" class="w-full p-4 rounded-xl font-black text-right text-cyan-600 shadow-sm">
-                                </div>
-                            </div>
+                            <span class="text-xs font-black text-cyan-600">
+                                Subtotal: {{ formatCurrency((item.qty || 1) * (item.price || 0), currentQuote.currency) }}
+                            </span>
                         </div>
 
-                        <button @click="addItem" class="w-full py-5 rounded-[2.5rem] border-2 border-dashed border-slate-400 font-black text-xs uppercase opacity-60 hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-                            <span>Añadir concepto</span>
-                        </button>
+                        <textarea v-model="item.desc" :placeholder="currentQuote.billingMode === 'estandar' ? 'Descripción del producto o servicio...' : 'Descripción de la labor o días...'" class="w-full border-b p-2 font-bold text-sm outline-none bg-transparent" rows="2"></textarea>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="text-[10px] font-black opacity-50 uppercase mb-1 block">{{ currentQuote.billingMode === 'estandar' ? 'Cantidad' : 'Días / Horas' }}</label>
+                                <input type="number" min="1" v-model.number="item.qty" class="w-full p-3 rounded-xl font-black text-center outline-none">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black opacity-50 uppercase mb-1 block">{{ currentQuote.billingMode === 'estandar' ? 'Precio c/u' : 'Valor x Día' }}</label>
+                                <!-- INPUT CON FORMATO DE PUNTO DE MIL EN TIEMPO REAL -->
+                                <input 
+                                    type="text" 
+                                    inputmode="numeric" 
+                                    :value="formatDots(item.price)" 
+                                    @input="onPriceInput(item, $event)" 
+                                    placeholder="0" 
+                                    class="w-full p-3 rounded-xl font-black text-right text-cyan-600 outline-none"
+                                >
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- DESPLEGABLE: Opciones de Cotización -->
-                    <div class="card overflow-hidden">
-                        <button @click="ui.showQuoteOptions = !ui.showQuoteOptions" class="w-full p-5 flex justify-between items-center font-black text-xs uppercase tracking-widest opacity-70 hover:opacity-100 transition-opacity">
-                            <span class="flex items-center gap-2">
-                                <svg class="w-4 h-4 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
-                                Opciones de Cotización
-                            </span>
-                            <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': ui.showQuoteOptions }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
-                        </button>
-                        <transition name="expand">
-                            <div v-if="ui.showQuoteOptions" class="p-6 pt-0 space-y-4 border-t border-slate-100 dark:border-slate-800 animate-in fade-in">
-                                <div class="flex items-center justify-between font-black text-xs mt-4">
-                                    <span>Vigencia:</span>
-                                    <div class="flex gap-2">
-                                        <button v-for="d in [3,7,15]" @click="currentQuote.validityDays = d" :class="currentQuote.validityDays === d ? 'text-cyan-600 underline text-lg' : 'opacity-40'" class="px-2 font-black transition-all">{{ d }}d</button>
-                                    </div>
-                                </div>
-                                <div class="flex items-center justify-between font-black text-xs">
-                                    <span>Mostrar mi logotipo</span>
-                                    <input type="checkbox" v-model="currentQuote.showLogo" class="w-7 h-7 accent-cyan-600">
-                                </div>
-                                <div class="flex items-center justify-between font-black text-xs">
-                                    <span>Mostrar mis datos</span>
-                                    <input type="checkbox" v-model="currentQuote.showTechInfo" class="w-7 h-7 accent-cyan-600">
-                                </div>
-                                <div class="flex items-center justify-between font-black text-xs">
-                                    <span>Incluir garantía</span>
-                                    <input type="checkbox" v-model="currentQuote.applyWarranty" class="w-7 h-7 accent-cyan-600">
-                                </div>
-                            </div>
-                        </transition>
-                    </div>
+                    <button @click="addItem" class="w-full py-3.5 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-800 font-bold text-xs uppercase opacity-70 hover:opacity-100 hover:border-cyan-500 transition-all flex items-center justify-center gap-1.5">
+                        <svg class="w-4 h-4 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                        <span>Añadir concepto</span>
+                    </button>
                 </div>
 
-                <!-- BARRA TOTAL INFERIOR -->
-                <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-6 bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl border-t-2 border-cyan-600/20 z-50 rounded-t-[3rem] shadow-2xl">
-                    <div class="flex justify-between items-center mb-5 px-4 font-black">
-                        <span class="opacity-40 text-[10px] tracking-widest uppercase">Total a cobrar</span>
-                        <span class="text-4xl text-cyan-600">{{ formatCOP(totalQuote) }}</span>
+                <!-- OPCIONES DE COTIZACIÓN -->
+                <div class="card overflow-hidden">
+                    <button @click="ui.showQuoteOptions = !ui.showQuoteOptions" class="w-full p-4 flex justify-between items-center font-black text-xs uppercase tracking-wider opacity-75">
+                        <span>⚙️ Opciones del PDF</span>
+                        <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': ui.showQuoteOptions }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <transition name="expand">
+                        <div v-if="ui.showQuoteOptions" class="p-4 pt-0 space-y-3 border-t border-slate-100 dark:border-slate-800">
+                            <div class="flex items-center justify-between font-bold text-xs pt-2">
+                                <span>Vigencia:</span>
+                                <div class="flex gap-2">
+                                    <button v-for="d in [3,7,15,30]" @click="currentQuote.validityDays = d" :class="currentQuote.validityDays === d ? 'text-cyan-600 underline font-black text-sm' : 'opacity-50'" class="px-1.5">{{ d }}d</button>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between font-bold text-xs">
+                                <div>
+                                    <span>Mostrar mi logotipo</span>
+                                    <span v-if="!techData.logoBase64" class="block text-[10px] text-amber-500 font-normal">(No has subido un logo)</span>
+                                </div>
+                                <input type="checkbox" v-model="currentQuote.showLogo" class="w-5 h-5 accent-cyan-600">
+                            </div>
+                            <div class="flex items-center justify-between font-bold text-xs">
+                                <span>Mostrar mis datos (emisor)</span>
+                                <input type="checkbox" v-model="currentQuote.showTechInfo" class="w-5 h-5 accent-cyan-600">
+                            </div>
+                            <div class="flex items-center justify-between font-bold text-xs">
+                                <span>Incluir cláusula de garantía</span>
+                                <input type="checkbox" v-model="currentQuote.applyWarranty" class="w-5 h-5 accent-cyan-600">
+                            </div>
+                        </div>
+                    </transition>
+                </div>
+
+                <!-- PANEL TOTAL Y BOTÓN DE GENERACIÓN -->
+                <div class="card p-5 space-y-4 border-2 border-cyan-600/30">
+                    <div class="flex justify-between items-center font-black">
+                        <span class="opacity-50 text-xs uppercase tracking-wider">Total a cobrar:</span>
+                        <span class="text-3xl text-cyan-600 dark:text-cyan-400">{{ formatCurrency(totalQuote, currentQuote.currency) }}</span>
                     </div>
-                    <button @click="generateAndSend" :disabled="isGenerating" class="w-full bg-cyan-600 text-white font-black py-6 rounded-[2rem] shadow-xl active:scale-95 transition-all text-xl uppercase tracking-widest flex items-center justify-center gap-3">
-                        <svg v-if="!isGenerating" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                        <span>{{ isGenerating ? 'Procesando...' : 'Generar y Compartir' }}</span>
+
+                    <button @click="generateAndSend" :disabled="isGenerating" :class="currentQuote.clientPhone ? 'btn-wa' : 'btn-main'" class="w-full py-4 rounded-xl shadow-lg active:scale-95 transition-all text-sm uppercase tracking-wider flex items-center justify-center gap-2">
+                        <svg v-if="!isGenerating && currentQuote.clientPhone" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.356.101.174.449.741.964 1.2.662.591 1.221.774 1.394.861.174.086.275.072.376-.044.101-.116.433-.506.549-.679.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
+                        <svg v-else-if="!isGenerating" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        <span>{{ isGenerating ? 'Generando PDF...' : (currentQuote.clientPhone ? 'Descargar y WhatsApp' : 'Descargar PDF') }}</span>
                     </button>
                 </div>
             </section>
 
-            <!-- 4. PANTALLA DE AJUSTES -->
-            <section v-if="view === 'settings'" class="py-4 animate-in slide-in-from-right">
-                <div class="flex items-center gap-4 mb-10">
-                    <button @click="view = 'main'" class="px-4 py-2.5 card font-black text-xs flex items-center gap-1.5 hover:border-cyan-500 transition-colors">
+            <!-- 4. AJUSTES / CONFIGURACIÓN COMPLETA -->
+            <section v-if="view === 'settings'" class="py-2 animate-in slide-in-from-right space-y-5">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+                    <button @click="view = 'main'" class="px-3.5 py-2 card font-black text-xs flex items-center gap-1.5 hover:border-cyan-500 transition-colors">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
-                        <span>VOLVER</span>
+                        <span>VOLVER AL INICIO</span>
                     </button>
-                    <h2 class="font-black text-xl">Configuración</h2>
+                    <h2 class="font-black text-xl flex items-center gap-2">
+                        <svg class="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        <span>Ajustes y Configuración</span>
+                    </h2>
                 </div>
 
-                <div class="space-y-6 pb-24">
-                    <div class="card p-8 space-y-6">
-                        <label class="block text-[10px] font-black opacity-40 uppercase tracking-widest">Datos de tu negocio</label>
-                        <input type="text" v-model="techData.name" @input="saveSettings" placeholder="Nombre del negocio" class="w-full p-4 rounded-xl outline-none font-bold">
-                        <input type="tel" v-model="techData.phone" @input="saveSettings" placeholder="Tu Teléfono" class="w-full p-4 rounded-xl outline-none font-bold">
-                        
-                        <label class="block text-[10px] font-black opacity-40 uppercase tracking-widest pt-4">Tu Logotipo de Negocio (PNG recomendado)</label>
-                        <div class="flex items-center gap-4">
-                            <label class="flex-1 bg-cyan-600 hover:bg-cyan-700 text-white p-4 rounded-xl text-center cursor-pointer font-bold text-xs shadow-lg uppercase tracking-wider flex items-center justify-center gap-2 transition-all">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                                <span>{{ techData.logoBase64 ? 'Cambiar Logo PNG' : 'Subir Logo PNG' }}</span>
-                                <input type="file" @change="handleLogoUpload" class="hidden" accept="image/png, image/jpeg, image/webp, image/*">
-                            </label>
-                            <div v-if="techData.logoBase64" class="relative group">
-                                <div class="w-16 h-16 bg-white rounded-2xl p-1 shadow-inner border border-slate-200 flex items-center justify-center overflow-hidden">
-                                    <img :src="techData.logoBase64" class="max-w-full max-h-full object-contain rounded-lg" alt="Logo subido">
+                <!-- TABS DE AJUSTES -->
+                <div class="grid grid-cols-3 gap-2 p-1 bg-slate-200/60 dark:bg-slate-800/60 rounded-2xl">
+                    <button @click="settingsTab = 'business'" :class="settingsTab === 'business' ? 'bg-cyan-600 text-white shadow-md' : 'opacity-70 hover:opacity-100'" class="py-2.5 px-2 rounded-xl text-xs font-black uppercase transition-all flex items-center justify-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                        <span>Negocio</span>
+                    </button>
+                    <button @click="settingsTab = 'pdf'" :class="settingsTab === 'pdf' ? 'bg-cyan-600 text-white shadow-md' : 'opacity-70 hover:opacity-100'" class="py-2.5 px-2 rounded-xl text-xs font-black uppercase transition-all flex items-center justify-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        <span>PDF & Logo</span>
+                    </button>
+                    <button @click="settingsTab = 'whatsapp'" :class="settingsTab === 'whatsapp' ? 'bg-cyan-600 text-white shadow-md' : 'opacity-70 hover:opacity-100'" class="py-2.5 px-2 rounded-xl text-xs font-black uppercase transition-all flex items-center justify-center gap-1.5">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.356.101.174.449.741.964 1.2.662.591 1.221.774 1.394.861.174.086.275.072.376-.044.101-.116.433-.506.549-.679.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
+                        <span>WhatsApp</span>
+                    </button>
+                </div>
+
+                <!-- 1. TAB NEGOCIO Y MONEDA -->
+                <div v-if="settingsTab === 'business'" class="space-y-4">
+                    <div class="card p-5 space-y-4">
+                        <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                            <h3 class="text-xs font-black uppercase tracking-wider text-cyan-600 dark:text-cyan-400">Datos Principales</h3>
+                            <span class="text-[10px] font-bold opacity-50">Aparecen en el encabezado del PDF</span>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-black opacity-60 uppercase mb-1">Nombre del Negocio o Técnico *</label>
+                            <input type="text" v-model="techData.name" @input="saveSettings" placeholder="Ej: Servicios Eléctricos Gómez / Darwin Alzate" class="w-full p-3.5 rounded-xl outline-none font-bold text-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-black opacity-60 uppercase mb-1">Tu Teléfono WhatsApp *</label>
+                            <input type="tel" v-model="techData.phone" @input="saveSettings" placeholder="Ej: +57 300 123 4567, +52 55..., etc." class="w-full p-3.5 rounded-xl outline-none font-bold text-sm">
+                            <p class="text-[10px] opacity-50 mt-1">Acepta cualquier código de país.</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-black opacity-60 uppercase mb-1">Moneda Predeterminada del Sistema</label>
+                            <select v-model="techData.defaultCurrency" @change="saveSettings" class="w-full p-3.5 rounded-xl font-bold text-sm outline-none">
+                                <option value="COP">COP ($) Colombia - Peso colombiano</option>
+                                <option value="USD">USD ($) Dólar estadounidense</option>
+                                <option value="EUR">EUR (€) Euro</option>
+                                <option value="MXN">MXN ($) México - Peso mexicano</option>
+                                <option value="ARS">ARS ($) Argentina - Peso argentino</option>
+                                <option value="CLP">CLP ($) Chile - Peso chileno</option>
+                                <option value="PEN">PEN (S/) Perú - Sol peruano</option>
+                                <option value="BOB">BOB (Bs) Bolivia - Boliviano</option>
+                                <option value="UYU">UYU ($) Uruguay - Peso uruguayo</option>
+                                <option value="PYG">PYG (₲) Paraguay - Guaraní</option>
+                                <option value="CRC">CRC (₡) Costa Rica - Colón costarricense</option>
+                                <option value="DOP">DOP (RD$) República Dominicana - Peso dominicano</option>
+                                <option value="GTQ">GTQ (Q) Guatemala - Quetzal</option>
+                                <option value="HNL">HNL (L) Honduras - Lempira</option>
+                                <option value="NIO">NIO (C$) Nicaragua - Córdoba</option>
+                                <option value="BRL">BRL (R$) Brasil - Real brasileño</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. TAB CONFIGURACIÓN DE PDF Y SUBIR LOGO -->
+                <div v-if="settingsTab === 'pdf'" class="space-y-4">
+                    <!-- SECCIÓN LOGOTIPO -->
+                    <div class="card p-5 space-y-4">
+                        <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                            <div>
+                                <h3 class="text-xs font-black uppercase tracking-wider text-cyan-600 dark:text-cyan-400">Logotipo del Cliente / Negocio</h3>
+                                <p class="text-[10px] font-bold opacity-50">Sube tu logo para que aparezca en el PDF generado</p>
+                            </div>
+                            <span class="text-[10px] font-black px-2 py-0.5 rounded bg-cyan-600/10 text-cyan-600 dark:text-cyan-400">PNG / JPG</span>
+                        </div>
+
+                        <div class="p-4 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 flex flex-col sm:flex-row items-center gap-4 justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-16 h-16 rounded-xl bg-white border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-center overflow-hidden shrink-0">
+                                    <img v-if="techData.logoBase64" :src="techData.logoBase64" class="max-w-full max-h-full object-contain p-1" alt="Logo de la empresa">
+                                    <div v-else class="text-center p-1">
+                                        <svg class="w-6 h-6 mx-auto opacity-30 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                        <span class="text-[9px] font-bold opacity-40 block leading-tight">Sin logo</span>
+                                    </div>
                                 </div>
-                                <button @click="removeLogo" title="Quitar logotipo" class="absolute -top-2 -right-2 bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shadow-md hover:scale-110 transition-transform">
-                                    ✕
+                                <div>
+                                    <p class="font-black text-sm">{{ techData.logoBase64 ? 'Logotipo activo' : 'Aún no has subido tu logo' }}</p>
+                                    <p class="text-[11px] opacity-60">Se imprime en la esquina superior izquierda del PDF.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2 w-full sm:w-auto">
+                                <label class="flex-1 sm:flex-initial bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2.5 rounded-xl text-center cursor-pointer font-black text-xs shadow-md uppercase flex items-center justify-center gap-1.5 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                                    <span>{{ techData.logoBase64 ? 'Cambiar Logo PNG' : 'Subir Logo PNG' }}</span>
+                                    <input type="file" @change="handleLogoUpload" class="hidden" accept="image/png, image/jpeg, image/webp, image/*">
+                                </label>
+                                <button v-if="techData.logoBase64" @click="removeLogo" title="Quitar logotipo" class="p-2.5 rounded-xl bg-red-600/10 hover:bg-red-600 text-red-600 hover:text-white transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- AJUSTES PREDETERMINADOS -->
-                    <div class="card p-8 space-y-5">
-                        <label class="block text-[10px] font-black opacity-40 uppercase tracking-widest">Ajustes del PDF (Siempre así)</label>
-                        <div class="flex items-center justify-between font-bold text-sm">
-                            <span>Mostrar mi logo</span>
-                            <input type="checkbox" v-model="techData.defaultShowLogo" @change="saveSettings" class="w-7 h-7 accent-cyan-600">
+                    <!-- OPCIONES PREDETERMINADAS DEL PDF -->
+                    <div class="card p-5 space-y-4">
+                        <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                            <h3 class="text-xs font-black uppercase tracking-wider text-cyan-600 dark:text-cyan-400">Opciones y Estilo del PDF</h3>
+                            <span class="text-[10px] font-bold opacity-50">Configura qué elementos mostrar</span>
                         </div>
-                        <div class="flex items-center justify-between font-bold text-sm">
-                            <span>Mostrar mis datos</span>
-                            <input type="checkbox" v-model="techData.defaultShowTechInfo" @change="saveSettings" class="w-7 h-7 accent-cyan-600">
-                        </div>
-                        <div class="flex items-center justify-between font-bold text-sm">
-                            <span>Incluir mi garantía</span>
-                            <input type="checkbox" v-model="techData.defaultApplyWarranty" @change="saveSettings" class="w-7 h-7 accent-cyan-600">
-                        </div>
-                        <label class="block text-[10px] font-black opacity-40 uppercase tracking-widest pt-4">Garantía Estándar</label>
-                        <textarea v-model="techData.warranty" @input="saveSettings" rows="3" class="w-full p-4 rounded-xl outline-none font-bold text-sm bg-transparent"></textarea>
-                    </div>
 
-                    <div class="card p-6 flex items-center justify-between">
-                        <span class="font-black text-xs uppercase opacity-40 tracking-widest">Tema Visual</span>
-                        <button @click="toggleTheme" class="bg-cyan-600 hover:bg-cyan-500 text-white px-6 py-3 rounded-xl font-black text-xs shadow-lg uppercase tracking-wider transition-all flex items-center gap-2">
-                            <template v-if="theme === 'dark'">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                                <span>Modo Claro</span>
-                            </template>
-                            <template v-else>
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-                                <span>Modo Oscuro</span>
-                            </template>
-                        </button>
-                    </div>
+                        <div class="space-y-3 font-bold text-xs">
+                            <label class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 cursor-pointer">
+                                <div>
+                                    <span class="block font-black text-sm">Incluir Logotipo por defecto</span>
+                                    <span class="text-[11px] opacity-60">Imprime el logo cargado en cada nueva cotización</span>
+                                </div>
+                                <input type="checkbox" v-model="techData.defaultShowLogo" @change="saveSettings" class="w-5 h-5 accent-cyan-600">
+                            </label>
 
-                    <button @click="resetApp" class="w-full p-4 text-red-500 hover:text-red-600 font-black text-[10px] uppercase opacity-40 hover:opacity-80 tracking-[0.3em] flex items-center justify-center gap-1.5 transition-all">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                        <span>Restablecer App</span>
+                            <label class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 cursor-pointer">
+                                <div>
+                                    <span class="block font-black text-sm">Mostrar datos del Emisor</span>
+                                    <span class="text-[11px] opacity-60">Incluye tu nombre y teléfono en la cabecera</span>
+                                </div>
+                                <input type="checkbox" v-model="techData.defaultShowTechInfo" @change="saveSettings" class="w-5 h-5 accent-cyan-600">
+                            </label>
+
+                            <label class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 cursor-pointer">
+                                <div>
+                                    <span class="block font-black text-sm">Incluir cláusula de garantía</span>
+                                    <span class="text-[11px] opacity-60">Agrega las condiciones y garantía al pie del PDF</span>
+                                </div>
+                                <input type="checkbox" v-model="techData.defaultApplyWarranty" @change="saveSettings" class="w-5 h-5 accent-cyan-600">
+                            </label>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-black opacity-60 uppercase mb-1">Texto de la Garantía en el PDF</label>
+                            <textarea v-model="techData.warranty" @input="saveSettings" rows="3" placeholder="Términos de garantía que aparecerán al final del PDF..." class="w-full p-3.5 rounded-xl outline-none font-bold text-xs bg-transparent"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. TAB WHATSAPP -->
+                <div v-if="settingsTab === 'whatsapp'" class="space-y-4">
+                    <div class="card p-5 space-y-4">
+                        <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                            <h3 class="text-xs font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Mensaje de WhatsApp</h3>
+                            <span class="text-[10px] font-bold opacity-50">Plantilla al abrir WhatsApp</span>
+                        </div>
+
+                        <p class="text-xs font-semibold opacity-70">
+                            Configura el mensaje que se escribe automáticamente en WhatsApp para el cliente cuando generas la cotización.
+                        </p>
+
+                        <div>
+                            <label class="block text-[10px] font-black opacity-60 uppercase mb-1">Plantilla de Mensaje</label>
+                            <textarea v-model="techData.waMessageTemplate" @input="saveSettings" rows="3" placeholder="Hola {cliente}, adjunto cotización formal de {negocio}." class="w-full p-3.5 rounded-xl outline-none font-bold text-sm bg-transparent"></textarea>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <span class="text-[10px] font-bold opacity-50">Variables disponibles:</span>
+                                <code class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-600/10 text-cyan-600 dark:text-cyan-400 font-mono font-bold cursor-pointer" @click="insertWaVar('{cliente}')">{cliente}</code>
+                                <code class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-600/10 text-cyan-600 dark:text-cyan-400 font-mono font-bold cursor-pointer" @click="insertWaVar('{negocio}')">{negocio}</code>
+                                <code class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-600/10 text-cyan-600 dark:text-cyan-400 font-mono font-bold cursor-pointer" @click="insertWaVar('{total}')">{total}</code>
+                            </div>
+                        </div>
+
+                        <div class="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-500/20 text-xs">
+                            <span class="font-black text-emerald-700 dark:text-emerald-300 block mb-1">Vista previa del mensaje:</span>
+                            <p class="italic text-slate-700 dark:text-slate-300">{{ previewWaMessage }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTONES DE ACCIÓN EN AJUSTES -->
+                <div class="flex flex-col sm:flex-row items-center gap-3 pt-2">
+                    <button @click="saveSettingsAndBack" class="w-full sm:flex-1 py-3.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-black text-xs uppercase tracking-wider shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        <span>Guardar Ajustes</span>
+                    </button>
+                    <button @click="resetApp" class="w-full sm:w-auto px-4 py-3.5 text-red-500 hover:bg-red-500/10 rounded-xl font-bold text-xs uppercase opacity-70 hover:opacity-100 transition-all">
+                        Restablecer App
                     </button>
                 </div>
             </section>
@@ -356,36 +559,114 @@ const { createApp } = Vue;
 createApp({
     data() {
         return {
-            view: 'onboarding', onboardingStep: 1, theme: 'light',
-            isGenerating: false, alert: { show: false, msg: '', type: 'success' },
+            view: 'onboarding', 
+            onboardingStep: 1, 
+            settingsTab: 'business',
+            theme: 'light',
+            isGenerating: false, 
+            alert: { show: false, msg: '', type: 'success' },
             ui: { showQuoteOptions: false },
             history: [],
             techData: { 
-                name: '', phone: '', logoBase64: '', 
-                warranty: 'Garantía de 30 días calendario contados a partir de la entrega.',
-                defaultShowLogo: true, defaultShowTechInfo: true, defaultApplyWarranty: true
+                name: '', 
+                phone: '', 
+                logoBase64: '', 
+                defaultCurrency: 'COP',
+                warranty: 'Garantía de 30 días calendario contados a partir de la entrega formal.',
+                waMessageTemplate: 'Hola {cliente}, te comparto la cotización de {negocio}.',
+                defaultShowLogo: true, 
+                defaultShowTechInfo: true, 
+                defaultApplyWarranty: true
             },
-            currentQuote: { clientName: '', clientPhone: '', validityDays: 7, billingMode: 'estandar', showLogo: true, showTechInfo: true, applyWarranty: true, items: [{ desc: '', qty: 1, price: null }] }
+            currentQuote: { 
+                clientName: '', 
+                clientPhone: '', 
+                currency: 'COP',
+                validityDays: 7, 
+                billingMode: 'estandar', 
+                showLogo: true, 
+                showTechInfo: true, 
+                applyWarranty: true, 
+                items: [{ desc: '', qty: 1, price: null }] 
+            }
         }
     },
-    computed: { totalQuote() { return this.currentQuote.items.reduce((acc, i) => acc + (i.qty * (i.price || 0)), 0); } },
+    computed: { 
+        totalQuote() { 
+            return this.currentQuote.items.reduce((acc, i) => acc + ((i.qty || 1) * (i.price || 0)), 0); 
+        },
+        previewWaMessage() {
+            const template = this.techData.waMessageTemplate || 'Hola {cliente}, te comparto la cotización de {negocio}.';
+            const client = this.currentQuote.clientName ? this.currentQuote.clientName.trim() : 'Carlos';
+            const business = this.techData.name ? this.techData.name.trim() : 'Mi Negocio';
+            const total = this.formatCurrency(this.totalQuote || 150000, this.currentQuote.currency || this.techData.defaultCurrency || 'COP');
+            return template
+                .replace(/{cliente}/g, client)
+                .replace(/{negocio}/g, business)
+                .replace(/{total}/g, total);
+        }
+    },
     mounted() {
         const c = localStorage.getItem('cp_v7_config');
         const h = localStorage.getItem('cp_v7_history');
-        const t = localStorage.getItem('cp_v7_theme');
-        if (t) this.theme = t;
-        if (c) { this.techData = JSON.parse(c); this.view = 'main'; }
-        if (h) this.history = JSON.parse(h);
-        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js').catch(e => console.log(e)); }
+        const t = localStorage.getItem('cp_v7_theme') || 'light';
+        this.theme = t;
+        this.applyThemeClass();
+        if (c) { 
+            this.techData = Object.assign(this.techData, JSON.parse(c)); 
+            this.view = 'main'; 
+        }
+        if (h) {
+            try { this.history = JSON.parse(h); } catch(e) { this.history = []; }
+        }
+        if ('serviceWorker' in navigator) { 
+            navigator.serviceWorker.register('./sw.js').catch(e => console.log(e)); 
+        }
     },
     methods: {
-        showAlert(msg, type = 'success') { this.alert = { show: true, msg, type }; setTimeout(() => this.alert.show = false, 3000); },
-        toggleTheme() { this.theme = this.theme === 'dark' ? 'light' : 'dark'; localStorage.setItem('cp_v7_theme', this.theme); },
-        saveSettings() { localStorage.setItem('cp_v7_config', JSON.stringify(this.techData)); },
-        finishOnboarding() { this.saveSettings(); this.showAlert('¡Configuración guardada!'); this.view = 'main'; },
+        showAlert(msg, type = 'success') { 
+            this.alert = { show: true, msg, type }; 
+            setTimeout(() => this.alert.show = false, 3000); 
+        },
+        applyThemeClass() {
+            const isDark = this.theme === 'dark';
+            document.documentElement.className = isDark ? 'dark-mode' : 'light-mode';
+            document.body.className = isDark ? 'dark-mode' : 'light-mode';
+        },
+        toggleTheme() { 
+            this.theme = this.theme === 'dark' ? 'light' : 'dark'; 
+            localStorage.setItem('cp_v7_theme', this.theme); 
+            this.applyThemeClass();
+        },
+        saveSettings() { 
+            localStorage.setItem('cp_v7_config', JSON.stringify(this.techData)); 
+        },
+        saveSettingsAndBack() {
+            this.saveSettings();
+            this.showAlert('¡Ajustes guardados correctamente!');
+            this.view = 'main';
+        },
+        openSettingsTab(tab = 'business') {
+            this.settingsTab = tab;
+            this.view = 'settings';
+        },
+        insertWaVar(variable) {
+            if (!this.techData.waMessageTemplate) this.techData.waMessageTemplate = '';
+            this.techData.waMessageTemplate += ' ' + variable;
+            this.saveSettings();
+        },
+        finishOnboarding() { 
+            this.saveSettings(); 
+            this.showAlert('¡Configuración guardada!'); 
+            this.view = 'main'; 
+        },
         startNewQuote() { 
             this.currentQuote = { 
-                clientName: '', clientPhone: '', validityDays: 7, billingMode: 'estandar', 
+                clientName: '', 
+                clientPhone: '', 
+                currency: this.techData.defaultCurrency || 'COP',
+                validityDays: 7, 
+                billingMode: 'estandar', 
                 showLogo: this.techData.defaultShowLogo, 
                 showTechInfo: this.techData.defaultShowTechInfo, 
                 applyWarranty: this.techData.defaultApplyWarranty, 
@@ -394,9 +675,48 @@ createApp({
             this.ui.showQuoteOptions = false; 
             this.view = 'quote'; 
         },
-        addItem() { this.currentQuote.items.push({ desc: '', qty: 1, price: null }); },
-        removeItem(idx) { this.currentQuote.items.splice(idx, 1); },
-        formatCOP(v) { return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(v); },
+        addItem() { 
+            this.currentQuote.items.push({ desc: '', qty: 1, price: null }); 
+        },
+        removeItem(idx) { 
+            this.currentQuote.items.splice(idx, 1); 
+        },
+        formatDots(num) {
+            if (num === null || num === undefined || num === '') return '';
+            const digits = String(num).replace(/\D/g, '');
+            if (!digits) return '';
+            return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        },
+        onPriceInput(item, event) {
+            const rawDigits = event.target.value.replace(/\D/g, '');
+            item.price = rawDigits ? parseInt(rawDigits, 10) : null;
+            event.target.value = this.formatDots(item.price);
+        },
+        formatCurrency(val, code) { 
+            const curr = code || (this.currentQuote && this.currentQuote.currency) || this.techData.defaultCurrency || 'COP';
+            const num = Math.round(val || 0);
+            const withDots = num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            const symbolMap = {
+                COP: '$',
+                USD: 'US$',
+                EUR: '€',
+                MXN: 'Mex$',
+                ARS: 'AR$',
+                CLP: 'CLP$',
+                PEN: 'S/',
+                BOB: 'Bs',
+                UYU: '$U',
+                PYG: '₲',
+                CRC: '₡',
+                DOP: 'RD$',
+                GTQ: 'Q',
+                HNL: 'L',
+                NIO: 'C$',
+                BRL: 'R$'
+            };
+            const s = symbolMap[curr] || '$';
+            return `${s} ${withDots} ${curr}`;
+        },
         handleLogoUpload(e) {
             const f = e.target.files[0]; 
             if (!f) return;
@@ -407,7 +727,7 @@ createApp({
             r.onload = (ev) => { 
                 this.techData.logoBase64 = ev.target.result; 
                 this.saveSettings(); 
-                this.showAlert('¡Logotipo guardado exitosamente!'); 
+                this.showAlert('¡Logotipo guardado!'); 
             };
             r.readAsDataURL(f);
         },
@@ -416,9 +736,37 @@ createApp({
             this.saveSettings();
             this.showAlert('Logotipo removido');
         },
-        getCleanPdfFileName() {
-            const raw = (this.currentQuote.clientName || 'Cliente').trim();
-            // Normalizar para remover tildes y caracteres especiales que rompen nombres en móviles
+        formatWhatsAppPhone(raw) {
+            if (!raw) return '';
+            let cleaned = String(raw).replace(/[^\d+]/g, '');
+            if (cleaned.startsWith('+')) cleaned = cleaned.substring(1);
+            // Si es número de 10 dígitos que empieza por 3 (móvil Colombia estándar sin prefijo), añade 57
+            if (cleaned.length === 10 && cleaned.startsWith('3')) {
+                cleaned = '57' + cleaned;
+            }
+            return cleaned;
+        },
+        getWhatsAppUrl(quote) {
+            const phone = this.formatWhatsAppPhone(quote.clientPhone);
+            if (!phone) return null;
+            const client = (quote.clientName || '').trim();
+            const business = (this.techData.name || '').trim();
+            const total = this.formatCurrency(quote.total !== undefined ? quote.total : this.totalQuote, quote.currency || this.techData.defaultCurrency || 'COP');
+            
+            let template = (this.techData.waMessageTemplate || '').trim();
+            if (!template) {
+                template = client ? `Hola {cliente}, te comparto la cotización formal.` : `Hola, te comparto la cotización formal.`;
+            }
+            
+            const msg = template
+                .replace(/{cliente}/g, client || 'Estimado cliente')
+                .replace(/{negocio}/g, business || 'nuestro servicio')
+                .replace(/{total}/g, total);
+
+            return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+        },
+        getCleanPdfFileName(clientName) {
+            const raw = (clientName || this.currentQuote.clientName || 'Cliente').trim();
             const safe = raw
                 .normalize('NFD')
                 .replace(/[\u0300-\u036f]/g, '')
@@ -432,92 +780,177 @@ createApp({
             const dd = String(now.getDate()).padStart(2, '0');
             return `Cotizacion_${safe}_${yyyy}${mm}${dd}.pdf`;
         },
-        async generateAndSend() {
-            if (!this.currentQuote.clientName) return this.showAlert('¡Falta el nombre del cliente!', 'error');
-            this.isGenerating = true;
-            try {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF('p', 'mm', 'letter');
-                let y = 20;
+        buildPdfDoc(quote) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'letter');
+            let y = 20;
 
-                // Solo incluir el logo si el usuario subió su propio logo (PNG/JPG)
-                const hasCustomLogo = Boolean(this.currentQuote.showLogo && this.techData.logoBase64);
-                if (hasCustomLogo) {
-                    try {
-                        const isPng = this.techData.logoBase64.includes('image/png');
-                        doc.addImage(this.techData.logoBase64, isPng ? 'PNG' : 'JPEG', 15, y, 28, 28);
-                    } catch(e) {
-                        console.warn('Error al insertar logo en PDF:', e);
-                    }
-                    doc.setFontSize(22); doc.setFont("helvetica", "bold");
-                    doc.setTextColor(15, 23, 42);
-                    doc.text("COTIZACIÓN", 195, y + 14, { align: 'right' });
-                    y += 36;
-                } else {
-                    doc.setFontSize(22); doc.setFont("helvetica", "bold");
-                    doc.setTextColor(15, 23, 42);
-                    doc.text("COTIZACIÓN", 15, y + 8);
-                    y += 20;
-                }
+            const hasCustomLogo = Boolean(quote.showLogo && this.techData.logoBase64);
+            if (hasCustomLogo) {
+                try {
+                    const isPng = this.techData.logoBase64.includes('image/png');
+                    doc.addImage(this.techData.logoBase64, isPng ? 'PNG' : 'JPEG', 15, y, 28, 28);
+                } catch(e) {}
+                doc.setFontSize(22); 
+                doc.setFont("helvetica", "bold");
+                doc.setTextColor(15, 23, 42);
+                doc.text("COTIZACIÓN", 195, y + 14, { align: 'right' });
+                y += 36;
+            } else {
+                doc.setFontSize(22); 
+                doc.setFont("helvetica", "bold");
+                doc.setTextColor(15, 23, 42);
+                doc.text("COTIZACIÓN", 15, y + 8);
+                y += 20;
+            }
 
-                if (this.currentQuote.showTechInfo) {
-                    doc.setFontSize(10); doc.setTextColor(100); doc.text("EMISOR:", 15, y);
-                    doc.setTextColor(0); doc.setFont("helvetica", "bold"); doc.text(this.techData.name, 15, y + 5);
-                    doc.setFont("helvetica", "normal"); doc.text(`Tel: ${this.techData.phone}`, 15, y + 10);
-                    y += 20;
-                }
+            if (quote.showTechInfo && this.techData.name) {
+                doc.setFontSize(9); 
+                doc.setTextColor(100); 
+                doc.text("EMISOR:", 15, y);
+                doc.setTextColor(15, 23, 42); 
+                doc.setFont("helvetica", "bold"); 
+                doc.text(this.techData.name, 15, y + 5);
+                doc.setFont("helvetica", "normal"); 
+                if (this.techData.phone) doc.text(`Tel: ${this.techData.phone}`, 15, y + 10);
+                y += 18;
+            }
 
-                doc.setFontSize(10); doc.setTextColor(100); doc.text("CLIENTE:", 15, y);
-                doc.setTextColor(0); doc.setFont("helvetica", "bold"); doc.text(this.currentQuote.clientName, 15, y + 5);
-                if (this.currentQuote.clientPhone) doc.text(`Tel: ${this.currentQuote.clientPhone}`, 15, y + 10);
-                
-                const exp = new Date(); exp.setDate(exp.getDate() + this.currentQuote.validityDays);
-                doc.setFont("helvetica", "normal"); doc.setTextColor(100);
-                doc.text(`Emisión: ${new Date().toLocaleDateString()}`, 120, y + 5);
-                doc.setTextColor(200, 0, 0); doc.text(`Vence: ${exp.toLocaleDateString()}`, 120, y + 10);
-                y += 25;
+            doc.setFontSize(9); 
+            doc.setTextColor(100); 
+            doc.text("CLIENTE:", 15, y);
+            doc.setTextColor(15, 23, 42); 
+            doc.setFont("helvetica", "bold"); 
+            doc.text(quote.clientName || 'Cliente', 15, y + 5);
+            doc.setFont("helvetica", "normal");
+            if (quote.clientPhone) doc.text(`Tel: ${quote.clientPhone}`, 15, y + 10);
+            
+            const exp = new Date(); 
+            exp.setDate(exp.getDate() + (quote.validityDays || 7));
+            doc.setTextColor(100);
+            doc.text(`Emisión: ${new Date().toLocaleDateString('es-CO')}`, 130, y + 5);
+            doc.setTextColor(190, 24, 93); 
+            doc.text(`Vence: ${exp.toLocaleDateString('es-CO')}`, 130, y + 10);
+            y += 20;
 
-                const isJ = this.currentQuote.billingMode === 'jornal';
-                const h = [[isJ ? 'Descripción del Trabajo' : 'Producto o Servicio', isJ ? 'Días/Hrs' : 'Cant.', isJ ? 'Valor x Día' : 'Precio Unit.', 'Subtotal']];
-                const r = this.currentQuote.items.map(i => [i.desc || 'Servicio', i.qty, this.formatCOP(i.price || 0), this.formatCOP(i.qty * (i.price || 0))]);
+            const isJ = quote.billingMode === 'jornal';
+            const h = [[isJ ? 'Descripción del Trabajo' : 'Producto o Servicio', isJ ? 'Días/Hrs' : 'Cant.', isJ ? 'Valor x Día' : 'Precio Unit.', 'Subtotal']];
+            const items = (quote.items && quote.items.length) ? quote.items : [{ desc: 'Servicios cotizados', qty: 1, price: quote.total }];
+            const curr = quote.currency || this.currentQuote.currency || this.techData.defaultCurrency || 'COP';
 
-                doc.autoTable({ 
-                    startY: y, head: h, body: r, theme: 'striped', 
-                    headStyles: { fillColor: [15, 23, 42] },
-                    styles: { fontSize: 9 }
-                });
-                y = doc.lastAutoTable.finalY + 15;
+            const r = items.map(i => [
+                i.desc || 'Servicio', 
+                i.qty || 1, 
+                this.formatCurrency(i.price || 0, curr), 
+                this.formatCurrency((i.qty || 1) * (i.price || 0), curr)
+            ]);
 
-                doc.setFontSize(16); doc.setFont("helvetica", "bold"); doc.setTextColor(6, 182, 212);
-                doc.text(`TOTAL: ${this.formatCOP(this.totalQuote)}`, 195, y, { align: 'right' });
+            doc.autoTable({ 
+                startY: y, 
+                head: h, 
+                body: r, 
+                theme: 'striped', 
+                headStyles: { fillColor: [15, 23, 42], fontSize: 9, fontStyle: 'bold' },
+                styles: { fontSize: 8.5, cellPadding: 3 }
+            });
+            y = doc.lastAutoTable.finalY + 12;
 
-                if (this.currentQuote.applyWarranty) {
-                    y += 20; doc.setFontSize(9); doc.setTextColor(100); doc.text("GARANTÍA:", 15, y);
-                    doc.setFont("helvetica", "normal"); doc.text(doc.splitTextToSize(this.techData.warranty, 180), 15, y + 5);
-                }
+            const totalAmount = quote.total !== undefined ? quote.total : this.totalQuote;
+            doc.setFontSize(15); 
+            doc.setFont("helvetica", "bold"); 
+            doc.setTextColor(8, 145, 178);
+            doc.text(`TOTAL: ${this.formatCurrency(totalAmount, curr)}`, 195, y, { align: 'right' });
 
-                // Generar nombre de archivo 100% limpio sin caracteres raros
-                const cleanFileName = this.getCleanPdfFileName();
-                const pdfBlob = doc.output('blob');
-                const file = new File([pdfBlob], cleanFileName, { type: 'application/pdf' });
-                
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    await navigator.share({ 
-                        files: [file], 
-                        title: `Cotización - ${this.currentQuote.clientName || 'Cliente'}` 
-                    });
-                } else { 
-                    doc.save(cleanFileName); 
-                }
+            if (quote.applyWarranty && this.techData.warranty) {
+                y += 16; 
+                doc.setFontSize(8.5); 
+                doc.setTextColor(100); 
+                doc.text("GARANTÍA:", 15, y);
+                doc.setFont("helvetica", "normal"); 
+                doc.text(doc.splitTextToSize(this.techData.warranty, 180), 15, y + 4.5);
+            }
 
-                this.history.unshift({ clientName: this.currentQuote.clientName, total: this.totalQuote, date: new Date().toLocaleDateString() });
-                if(this.history.length > 10) this.history.pop();
-                localStorage.setItem('cp_v7_history', JSON.stringify(this.history));
-                this.view = 'main'; this.showAlert('¡Cotización generada!');
-            } catch (err) { console.error(err); this.showAlert('Error al crear PDF', 'error'); } finally { this.isGenerating = false; }
+            return doc;
         },
-        deleteHistory(idx) { this.history.splice(idx, 1); localStorage.setItem('cp_v7_history', JSON.stringify(this.history)); },
-        resetApp() { if(confirm("¿Borrar todo?")) { localStorage.clear(); window.location.reload(); } }
+        async generateAndSend() {
+            if (!this.currentQuote.clientName || !this.currentQuote.clientName.trim()) {
+                return this.showAlert('¡Falta ingresar el nombre del cliente!', 'error');
+            }
+            this.isGenerating = true;
+
+            try {
+                const doc = this.buildPdfDoc(this.currentQuote);
+                const cleanFileName = this.getCleanPdfFileName(this.currentQuote.clientName);
+
+                // 1. Descarga automática del archivo PDF
+                doc.save(cleanFileName);
+
+                // 2. Guardar en historial
+                const quoteRecord = {
+                    id: Date.now(),
+                    clientName: this.currentQuote.clientName.trim(),
+                    clientPhone: this.currentQuote.clientPhone ? this.currentQuote.clientPhone.trim() : '',
+                    total: this.totalQuote,
+                    currency: this.currentQuote.currency || this.techData.defaultCurrency || 'COP',
+                    date: new Date().toLocaleDateString('es-CO'),
+                    validityDays: this.currentQuote.validityDays,
+                    billingMode: this.currentQuote.billingMode,
+                    showLogo: this.currentQuote.showLogo,
+                    showTechInfo: this.currentQuote.showTechInfo,
+                    applyWarranty: this.currentQuote.applyWarranty,
+                    items: JSON.parse(JSON.stringify(this.currentQuote.items))
+                };
+
+                this.history.unshift(quoteRecord);
+                if (this.history.length > 20) this.history.pop();
+                localStorage.setItem('cp_v7_history', JSON.stringify(this.history));
+
+                // 3. Abrir WhatsApp si hay número registrado
+                const waUrl = this.getWhatsAppUrl(this.currentQuote);
+                if (waUrl) {
+                    window.open(waUrl, '_blank');
+                }
+
+                this.showAlert('¡PDF descargado con éxito!');
+                this.view = 'main';
+
+            } catch (err) { 
+                console.error(err); 
+                this.showAlert('Error al generar el PDF', 'error'); 
+            } finally { 
+                this.isGenerating = false; 
+            }
+        },
+        reDownloadHistoryPdf(h) {
+            try {
+                const doc = this.buildPdfDoc(h);
+                const cleanFileName = this.getCleanPdfFileName(h.clientName);
+                doc.save(cleanFileName);
+                this.showAlert(`PDF descargado: ${cleanFileName}`);
+            } catch(e) {
+                console.error(e);
+                this.showAlert('Error al descargar PDF', 'error');
+            }
+        },
+        openWhatsAppForHistory(h) {
+            const url = this.getWhatsAppUrl(h);
+            if (url) {
+                window.open(url, '_blank');
+            } else {
+                this.showAlert('Esta cotización no tiene número registrado', 'error');
+            }
+        },
+        deleteHistory(idx) { 
+            this.history.splice(idx, 1); 
+            localStorage.setItem('cp_v7_history', JSON.stringify(this.history)); 
+            this.showAlert('Eliminado del historial');
+        },
+        resetApp() { 
+            if(confirm("¿Restablecer datos e historial?")) { 
+                localStorage.clear(); 
+                window.location.reload(); 
+            } 
+        }
     }
 }).mount('#app');
 </script>
