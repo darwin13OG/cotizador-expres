@@ -184,27 +184,33 @@
                         Aún no tienes cotizaciones guardadas
                     </div>
 
-                    <div v-for="(h, idx) in history" :key="h.id || idx" class="card p-4 flex items-center justify-between gap-3">
-                        <div class="space-y-0.5 truncate">
-                            <h4 class="font-black text-base truncate">{{ h.clientName }}</h4>
-                            <p class="text-xs font-bold text-cyan-600 dark:text-cyan-400">
+                    <div v-for="(h, idx) in history" :key="h.id || idx" class="card p-3 sm:p-4 flex items-center justify-between gap-2 sm:gap-3">
+                        <div class="space-y-0.5 min-w-0 flex-1">
+                            <h4 class="font-black text-sm sm:text-base truncate">{{ h.clientName }}</h4>
+                            <p class="text-[11px] sm:text-xs font-bold text-cyan-600 dark:text-cyan-400">
                                 {{ h.date }} • {{ formatCurrency(h.total, h.currency) }}
                             </p>
+                            <span v-if="h.clientPhone" class="text-[10px] opacity-50 block truncate">
+                                📞 {{ h.clientPhone }}
+                            </span>
                         </div>
 
-                        <div class="flex items-center gap-1.5 shrink-0">
-                            <button v-if="h.clientPhone" @click="openWhatsAppForHistory(h)" title="Enviar WhatsApp" class="p-2 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold text-xs flex items-center gap-1 transition-colors">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.356.101.174.449.741.964 1.2.662.591 1.221.774 1.394.861.174.086.275.072.376-.044.101-.116.433-.506.549-.679.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
-                                <span>WhatsApp</span>
+                        <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
+                            <!-- BOTÓN WHATSAPP (SIEMPRE DISPONIBLE: NÚMERO O CUALQUIER CONTACTO) -->
+                            <button @click="openShareModal(h)" title="Compartir o enviar por WhatsApp" class="p-2 sm:px-2.5 sm:py-2 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold text-xs flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.356.101.174.449.741.964 1.2.662.591 1.221.774 1.394.861.174.086.275.072.376-.044.101-.116.433-.506.549-.679.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
+                                <span class="hidden sm:inline">WhatsApp</span>
                             </button>
 
-                            <button @click="reDownloadHistoryPdf(h)" title="Descargar PDF" class="p-2 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 font-bold text-xs flex items-center gap-1 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                                <span>PDF</span>
+                            <!-- BOTÓN DESCARGAR PDF -->
+                            <button @click="reDownloadHistoryPdf(h)" title="Descargar PDF" class="p-2 sm:px-2.5 sm:py-2 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 font-bold text-xs flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                <span class="hidden sm:inline">PDF</span>
                             </button>
 
+                            <!-- BOTÓN ELIMINAR -->
                             <button @click="deleteHistory(idx)" title="Eliminar" class="p-2 rounded-lg text-red-500 hover:bg-red-500/10 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                             </button>
                         </div>
                     </div>
@@ -345,18 +351,26 @@
                     </transition>
                 </div>
 
-                <!-- PANEL TOTAL Y BOTÓN DE GENERACIÓN -->
+                <!-- PANEL TOTAL Y ACCIONES DE GENERACIÓN -->
                 <div class="card p-3.5 sm:p-5 space-y-3 sm:space-y-4 border-2 border-cyan-600/30">
                     <div class="flex justify-between items-center font-black">
                         <span class="opacity-50 text-[11px] sm:text-xs uppercase tracking-wider">Total a cobrar:</span>
                         <span class="text-2xl sm:text-3xl text-cyan-600 dark:text-cyan-400">{{ formatCurrency(totalQuote, currentQuote.currency) }}</span>
                     </div>
 
-                    <button @click="generateAndSend" :disabled="isGenerating" :class="currentQuote.clientPhone ? 'btn-wa' : 'btn-main'" class="w-full py-3.5 sm:py-4 rounded-xl shadow-lg active:scale-95 transition-all text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2">
-                        <svg v-if="!isGenerating && currentQuote.clientPhone" class="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.356.101.174.449.741.964 1.2.662.591 1.221.774 1.394.861.174.086.275.072.376-.044.101-.116.433-.506.549-.679.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
-                        <svg v-else-if="!isGenerating" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                        <span>{{ isGenerating ? 'Generando PDF...' : (currentQuote.clientPhone ? 'Descargar y WhatsApp' : 'Descargar PDF') }}</span>
-                    </button>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                        <!-- BOTÓN WHATSAPP (NÚMERO O CUALQUIER CONTACTO) -->
+                        <button @click="openShareModal(null)" :disabled="isGenerating" class="btn-wa py-3 sm:py-3.5 px-3 rounded-xl shadow-lg active:scale-95 transition-all text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.356.101.174.449.741.964 1.2.662.591 1.221.774 1.394.861.174.086.275.072.376-.044.101-.116.433-.506.549-.679.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
+                            <span>WhatsApp (Número o Contacto)</span>
+                        </button>
+
+                        <!-- BOTÓN DESCARGAR DIRECTO PDF -->
+                        <button @click="quickDownloadCurrentPdf" :disabled="isGenerating" class="btn-main py-3 sm:py-3.5 px-3 rounded-xl shadow-lg active:scale-95 transition-all text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <span>Descargar Solo PDF</span>
+                        </button>
+                    </div>
                 </div>
             </section>
 
@@ -696,6 +710,116 @@
                 </div>
             </transition>
 
+            <!-- MODAL DE COMPARTIR Y ENVIAR COTIZACIÓN (WHATSAPP NÚMERO, CONTACTO O DESCARGA) -->
+            <transition enter-active-class="transition duration-200 ease-out" enter-from-class="opacity-0 scale-95" enter-to-class="opacity-100 scale-100" leave-active-class="transition duration-150 ease-in" leave-from-class="opacity-100 scale-100" leave-to-class="opacity-0 scale-95">
+                <div v-if="ui.showShareModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-2 sm:p-4" @click.self="ui.showShareModal = false">
+                    <div class="card w-full max-w-lg max-h-[92vh] flex flex-col p-4 sm:p-6 shadow-2xl space-y-3.5 sm:space-y-4 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 animate-in slide-in-from-bottom-6">
+                        
+                        <!-- ENCABEZADO MODAL -->
+                        <div class="flex items-start justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+                            <div class="flex items-center gap-2.5">
+                                <span class="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.356.101.174.449.741.964 1.2.662.591 1.221.774 1.394.861.174.086.275.072.376-.044.101-.116.433-.506.549-.679.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
+                                </span>
+                                <div class="min-w-0">
+                                    <h3 class="font-black text-base sm:text-lg truncate">Enviar o Descargar</h3>
+                                    <p class="text-xs font-bold text-slate-500 dark:text-slate-400 truncate">
+                                        {{ (ui.shareQuoteTarget ? ui.shareQuoteTarget.clientName : currentQuote.clientName) || 'Cliente' }} • {{ formatCurrency(ui.shareQuoteTarget ? ui.shareQuoteTarget.total : totalQuote, (ui.shareQuoteTarget ? ui.shareQuoteTarget.currency : currentQuote.currency)) }}
+                                    </p>
+                                </div>
+                            </div>
+                            <button @click="ui.showShareModal = false" class="p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500 text-sm font-black transition-colors">✕</button>
+                        </div>
+
+                        <!-- CONTENIDO DE OPCIONES -->
+                        <div class="space-y-3 overflow-y-auto max-h-[62vh] pr-1">
+                            
+                            <!-- OPCIÓN 1: ENVIAR DIRECTO AL NÚMERO DE TELÉFONO -->
+                            <div class="p-3 sm:p-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 bg-slate-50/60 dark:bg-slate-900/40 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                        <span class="font-black text-xs uppercase tracking-wider">1. Enviar directo a un número</span>
+                                    </div>
+                                    <span v-if="ui.shareCustomPhone" class="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">Listo</span>
+                                </div>
+                                
+                                <p class="text-[11px] opacity-70">
+                                    Abre la conversación de WhatsApp directa con el número del cliente y el mensaje redactado listo para enviar.
+                                </p>
+
+                                <div class="flex items-center gap-2 pt-1">
+                                    <input type="tel" v-model="ui.shareCustomPhone" placeholder="Teléfono (ej: 3001234567 o +57...)" class="flex-1 p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 outline-none text-xs font-bold bg-white dark:bg-slate-800">
+                                    <button @click="shareDirectToNumber" :disabled="!ui.shareCustomPhone.trim() || isGenerating" class="px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-black text-xs flex items-center gap-1.5 shrink-0 transition-all active:scale-95 shadow">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.356.101.174.449.741.964 1.2.662.591 1.221.774 1.394.861.174.086.275.072.376-.044.101-.116.433-.506.549-.679.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
+                                        <span>Enviar</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- OPCIÓN 2: ELEGIR CONTACTO O USUARIO EN WHATSAPP -->
+                            <div class="p-3 sm:p-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 bg-slate-50/60 dark:bg-slate-900/40 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                        <span class="font-black text-xs uppercase tracking-wider">2. Elegir contacto en WhatsApp</span>
+                                    </div>
+                                    <span class="text-[9px] font-bold text-slate-500 bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded-full">Sin guardar número</span>
+                                </div>
+                                
+                                <p class="text-[11px] opacity-70">
+                                    Abre WhatsApp para que selecciones a cualquier contacto, usuario o chat existente de tu lista.
+                                </p>
+
+                                <button @click="shareToAnyContact" :disabled="isGenerating" class="w-full py-2.5 px-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-black text-xs flex items-center justify-center gap-2 transition-all border border-emerald-500/30 active:scale-98">
+                                    <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.356.101.174.449.741.964 1.2.662.591 1.221.774 1.394.861.174.086.275.072.376-.044.101-.116.433-.506.549-.679.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
+                                    <span>Abrir WhatsApp y elegir contacto</span>
+                                </button>
+
+                                <!-- COMPARTIR ARCHIVO DIRECTO EN MÓVIL SI EL DISPOSITIVO LO SOPORTA -->
+                                <button v-if="canShareFile" @click="shareWithFileAttachment" :disabled="isGenerating" class="w-full py-2 px-3 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 font-bold text-xs flex items-center justify-center gap-2 transition-all border border-purple-500/30 active:scale-98">
+                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                                    <span>Compartir con PDF adjunto en WhatsApp (Móvil)</span>
+                                </button>
+                            </div>
+
+                            <!-- OPCIÓN 3: SOLO DESCARGAR ARCHIVO PDF -->
+                            <div class="p-3 sm:p-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-cyan-500/50 bg-slate-50/60 dark:bg-slate-900/40 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="w-2 h-2 rounded-full bg-cyan-500"></span>
+                                        <span class="font-black text-xs uppercase tracking-wider">3. Solo descargar archivo PDF</span>
+                                    </div>
+                                    <span class="text-[9px] font-bold text-cyan-600 dark:text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-full">Sin WhatsApp</span>
+                                </div>
+                                
+                                <p class="text-[11px] opacity-70">
+                                    Descarga el archivo PDF directamente en tu almacenamiento sin abrir WhatsApp.
+                                </p>
+
+                                <button @click="downloadPdfDirect" :disabled="isGenerating" class="w-full py-2.5 px-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-black text-xs flex items-center justify-center gap-2 transition-all shadow active:scale-98">
+                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                    <span>Descargar archivo PDF</span>
+                                </button>
+                            </div>
+
+                            <!-- PREFERENCIA: DESCARGAR COPIA AL ENVIAR -->
+                            <label class="flex items-center gap-2 text-xs opacity-75 cursor-pointer pt-1 px-1">
+                                <input type="checkbox" v-model="ui.shareAutoDownload" class="w-4 h-4 accent-cyan-600 rounded">
+                                <span>Descargar automáticamente copia del PDF al enviar por WhatsApp</span>
+                            </label>
+                        </div>
+
+                        <!-- PIE DEL MODAL -->
+                        <div class="pt-2 border-t border-slate-200 dark:border-slate-800 flex justify-end">
+                            <button @click="ui.showShareModal = false" class="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 font-black text-xs">
+                                Listo / Cerrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </transition>
+
         </div>
     </div>
 </div>
@@ -712,7 +836,14 @@ createApp({
             theme: 'light',
             isGenerating: false, 
             alert: { show: false, msg: '', type: 'success' },
-            ui: { showQuoteOptions: false, showCatalogPicker: false },
+            ui: { 
+                showQuoteOptions: false, 
+                showCatalogPicker: false,
+                showShareModal: false,
+                shareQuoteTarget: null,
+                shareCustomPhone: '',
+                shareAutoDownload: true
+            },
             history: [],
             catalog: [],
             catalogFilter: '',
@@ -759,6 +890,12 @@ createApp({
                 .replace(/{cliente}/g, client)
                 .replace(/{negocio}/g, business)
                 .replace(/{total}/g, total);
+        },
+        activeShareQuote() {
+            return this.ui.shareQuoteTarget || this.currentQuote;
+        },
+        canShareFile() {
+            return typeof navigator !== 'undefined' && typeof navigator.share === 'function' && typeof navigator.canShare === 'function';
         }
     },
     mounted() {
@@ -964,24 +1101,36 @@ createApp({
             }
             return cleaned;
         },
-        getWhatsAppUrl(quote) {
-            const phone = this.formatWhatsAppPhone(quote.clientPhone);
-            if (!phone) return null;
-            const client = (quote.clientName || '').trim();
+        getWhatsAppMessageText(quote) {
+            const q = quote || this.activeShareQuote;
+            const client = (q.clientName || '').trim();
             const business = (this.techData.name || '').trim();
-            const total = this.formatCurrency(quote.total !== undefined ? quote.total : this.totalQuote, quote.currency || this.techData.defaultCurrency || 'COP');
+            const totalVal = q.total !== undefined ? q.total : this.totalQuote;
+            const curr = q.currency || this.currentQuote.currency || this.techData.defaultCurrency || 'COP';
+            const total = this.formatCurrency(totalVal, curr);
             
             let template = (this.techData.waMessageTemplate || '').trim();
             if (!template) {
-                template = client ? `Hola {cliente}, te comparto la cotización formal.` : `Hola, te comparto la cotización formal.`;
+                template = client ? `Hola {cliente}, te comparto la cotización formal de {negocio} por un total de {total}.` : `Hola, te comparto la cotización formal de {negocio} por un total de {total}.`;
             }
             
-            const msg = template
+            return template
                 .replace(/{cliente}/g, client || 'Estimado cliente')
                 .replace(/{negocio}/g, business || 'nuestro servicio')
                 .replace(/{total}/g, total);
+        },
+        getWhatsAppUrl(quote, customPhone = null) {
+            const q = quote || this.activeShareQuote;
+            const rawPhone = customPhone !== null ? customPhone : (q.clientPhone || this.ui.shareCustomPhone || '');
+            const phone = this.formatWhatsAppPhone(rawPhone);
+            const msg = this.getWhatsAppMessageText(q);
 
-            return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+            if (phone) {
+                return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+            } else {
+                // Sin número: abre WhatsApp para seleccionar cualquier usuario o contacto
+                return `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+            }
         },
         getCleanPdfFileName(clientName) {
             const raw = (clientName || this.currentQuote.clientName || 'Cliente').trim();
@@ -1090,54 +1239,182 @@ createApp({
 
             return doc;
         },
-        async generateAndSend() {
+        saveQuoteToHistoryIfNeeded(targetQuote) {
+            if (targetQuote && targetQuote.id) {
+                // Ya existe en historial
+                return targetQuote;
+            }
+            const phoneToSave = (this.ui.shareCustomPhone || this.currentQuote.clientPhone || '').trim();
+            const quoteRecord = {
+                id: Date.now(),
+                clientName: this.currentQuote.clientName.trim(),
+                clientPhone: phoneToSave,
+                total: this.totalQuote,
+                currency: this.currentQuote.currency || this.techData.defaultCurrency || 'COP',
+                date: new Date().toLocaleDateString('es-CO'),
+                validityDays: this.currentQuote.validityDays,
+                billingMode: this.currentQuote.billingMode,
+                showLogo: this.currentQuote.showLogo,
+                showTechInfo: this.currentQuote.showTechInfo,
+                applyWarranty: this.currentQuote.applyWarranty,
+                items: JSON.parse(JSON.stringify(this.currentQuote.items))
+            };
+
+            this.history.unshift(quoteRecord);
+            if (this.history.length > 20) this.history.pop();
+            localStorage.setItem('cp_v7_history', JSON.stringify(this.history));
+            return quoteRecord;
+        },
+        openShareModal(quote = null) {
+            if (!quote) {
+                if (!this.currentQuote.clientName || !this.currentQuote.clientName.trim()) {
+                    return this.showAlert('¡Falta ingresar el nombre del cliente!', 'error');
+                }
+                this.ui.shareQuoteTarget = null;
+                this.ui.shareCustomPhone = this.currentQuote.clientPhone ? this.currentQuote.clientPhone.trim() : '';
+            } else {
+                this.ui.shareQuoteTarget = quote;
+                this.ui.shareCustomPhone = quote.clientPhone ? quote.clientPhone.trim() : '';
+            }
+            this.ui.showShareModal = true;
+        },
+        async shareDirectToNumber() {
+            const phone = (this.ui.shareCustomPhone || '').trim();
+            if (!phone) {
+                return this.showAlert('Por favor ingresa un número de teléfono', 'error');
+            }
+            this.isGenerating = true;
+            try {
+                const savedQuote = this.saveQuoteToHistoryIfNeeded(this.ui.shareQuoteTarget);
+                
+                if (this.ui.shareAutoDownload) {
+                    const doc = this.buildPdfDoc(savedQuote);
+                    const cleanFileName = this.getCleanPdfFileName(savedQuote.clientName);
+                    doc.save(cleanFileName);
+                }
+
+                const waUrl = this.getWhatsAppUrl(savedQuote, phone);
+                window.open(waUrl, '_blank');
+
+                this.showAlert('¡Abriendo WhatsApp para el número indicado!');
+                this.ui.showShareModal = false;
+                if (!this.ui.shareQuoteTarget) {
+                    this.view = 'main';
+                }
+            } catch (err) {
+                console.error(err);
+                this.showAlert('Error al procesar envío', 'error');
+            } finally {
+                this.isGenerating = false;
+            }
+        },
+        async shareToAnyContact() {
+            this.isGenerating = true;
+            try {
+                const savedQuote = this.saveQuoteToHistoryIfNeeded(this.ui.shareQuoteTarget);
+
+                if (this.ui.shareAutoDownload) {
+                    const doc = this.buildPdfDoc(savedQuote);
+                    const cleanFileName = this.getCleanPdfFileName(savedQuote.clientName);
+                    doc.save(cleanFileName);
+                }
+
+                // Genera enlace de WhatsApp sin número (abre selector de contactos/chats)
+                const waUrl = this.getWhatsAppUrl(savedQuote, '');
+                window.open(waUrl, '_blank');
+
+                this.showAlert('¡WhatsApp abierto! Elige el contacto o grupo');
+                this.ui.showShareModal = false;
+                if (!this.ui.shareQuoteTarget) {
+                    this.view = 'main';
+                }
+            } catch (err) {
+                console.error(err);
+                this.showAlert('Error al abrir WhatsApp', 'error');
+            } finally {
+                this.isGenerating = false;
+            }
+        },
+        async shareWithFileAttachment() {
+            this.isGenerating = true;
+            try {
+                const savedQuote = this.saveQuoteToHistoryIfNeeded(this.ui.shareQuoteTarget);
+                const doc = this.buildPdfDoc(savedQuote);
+                const cleanFileName = this.getCleanPdfFileName(savedQuote.clientName);
+                const pdfBlob = doc.output('blob');
+                const pdfFile = new File([pdfBlob], cleanFileName, { type: 'application/pdf' });
+                const msg = this.getWhatsAppMessageText(savedQuote);
+
+                if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
+                    this.ui.showShareModal = false;
+                    await navigator.share({
+                        files: [pdfFile],
+                        title: `Cotización - ${savedQuote.clientName}`,
+                        text: msg
+                    });
+                    this.showAlert('¡Cotización compartida con éxito!');
+                    if (!this.ui.shareQuoteTarget) {
+                        this.view = 'main';
+                    }
+                } else {
+                    doc.save(cleanFileName);
+                    const waUrl = this.getWhatsAppUrl(savedQuote, this.ui.shareCustomPhone || '');
+                    window.open(waUrl, '_blank');
+                    this.showAlert('PDF descargado y WhatsApp abierto');
+                    this.ui.showShareModal = false;
+                    if (!this.ui.shareQuoteTarget) {
+                        this.view = 'main';
+                    }
+                }
+            } catch (err) {
+                if (err && err.name !== 'AbortError') {
+                    console.error(err);
+                    this.showAlert('No se pudo compartir el archivo directamente', 'error');
+                }
+            } finally {
+                this.isGenerating = false;
+            }
+        },
+        downloadPdfDirect() {
+            this.isGenerating = true;
+            try {
+                const savedQuote = this.saveQuoteToHistoryIfNeeded(this.ui.shareQuoteTarget);
+                const doc = this.buildPdfDoc(savedQuote);
+                const cleanFileName = this.getCleanPdfFileName(savedQuote.clientName);
+                doc.save(cleanFileName);
+                this.showAlert('¡PDF descargado con éxito!');
+                this.ui.showShareModal = false;
+                if (!this.ui.shareQuoteTarget) {
+                    this.view = 'main';
+                }
+            } catch (err) {
+                console.error(err);
+                this.showAlert('Error al descargar PDF', 'error');
+            } finally {
+                this.isGenerating = false;
+            }
+        },
+        quickDownloadCurrentPdf() {
             if (!this.currentQuote.clientName || !this.currentQuote.clientName.trim()) {
                 return this.showAlert('¡Falta ingresar el nombre del cliente!', 'error');
             }
             this.isGenerating = true;
-
             try {
-                const doc = this.buildPdfDoc(this.currentQuote);
-                const cleanFileName = this.getCleanPdfFileName(this.currentQuote.clientName);
-
-                // 1. Descarga automática del archivo PDF
+                const savedQuote = this.saveQuoteToHistoryIfNeeded(null);
+                const doc = this.buildPdfDoc(savedQuote);
+                const cleanFileName = this.getCleanPdfFileName(savedQuote.clientName);
                 doc.save(cleanFileName);
-
-                // 2. Guardar en historial
-                const quoteRecord = {
-                    id: Date.now(),
-                    clientName: this.currentQuote.clientName.trim(),
-                    clientPhone: this.currentQuote.clientPhone ? this.currentQuote.clientPhone.trim() : '',
-                    total: this.totalQuote,
-                    currency: this.currentQuote.currency || this.techData.defaultCurrency || 'COP',
-                    date: new Date().toLocaleDateString('es-CO'),
-                    validityDays: this.currentQuote.validityDays,
-                    billingMode: this.currentQuote.billingMode,
-                    showLogo: this.currentQuote.showLogo,
-                    showTechInfo: this.currentQuote.showTechInfo,
-                    applyWarranty: this.currentQuote.applyWarranty,
-                    items: JSON.parse(JSON.stringify(this.currentQuote.items))
-                };
-
-                this.history.unshift(quoteRecord);
-                if (this.history.length > 20) this.history.pop();
-                localStorage.setItem('cp_v7_history', JSON.stringify(this.history));
-
-                // 3. Abrir WhatsApp si hay número registrado
-                const waUrl = this.getWhatsAppUrl(this.currentQuote);
-                if (waUrl) {
-                    window.open(waUrl, '_blank');
-                }
-
-                this.showAlert('¡PDF descargado con éxito!');
+                this.showAlert('¡PDF descargado y guardado en historial!');
                 this.view = 'main';
-
-            } catch (err) { 
-                console.error(err); 
-                this.showAlert('Error al generar el PDF', 'error'); 
-            } finally { 
-                this.isGenerating = false; 
+            } catch (err) {
+                console.error(err);
+                this.showAlert('Error al generar PDF', 'error');
+            } finally {
+                this.isGenerating = false;
             }
+        },
+        async generateAndSend() {
+            this.openShareModal(null);
         },
         reDownloadHistoryPdf(h) {
             try {
@@ -1151,12 +1428,7 @@ createApp({
             }
         },
         openWhatsAppForHistory(h) {
-            const url = this.getWhatsAppUrl(h);
-            if (url) {
-                window.open(url, '_blank');
-            } else {
-                this.showAlert('Esta cotización no tiene número registrado', 'error');
-            }
+            this.openShareModal(h);
         },
         deleteHistory(idx) { 
             this.history.splice(idx, 1); 
