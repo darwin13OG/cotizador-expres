@@ -161,17 +161,16 @@
                             <svg v-if="theme === 'dark'" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                             <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
                         </button>
-                        <button @click="view = 'settings'" title="Ajustes" class="p-2.5 card hover:border-cyan-500 transition-colors flex items-center gap-1.5">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                            <span class="text-xs font-bold uppercase">Ajustes</span>
+                        <button @click="view = 'settings'" title="Ajustes" class="p-2.5 card hover:border-cyan-500 transition-colors flex items-center justify-center">
+                            <svg class="w-4 h-4 text-slate-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         </button>
                     </div>
                 </header>
 
                 <!-- BOTÓN PRINCIPAL NUEVA COTIZACIÓN -->
-                <button @click="startNewQuote" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-black py-8 px-6 rounded-2xl shadow-xl shadow-cyan-900/20 flex flex-col items-center justify-center gap-2 active:scale-95 transition-all">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 13h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                    <span class="tracking-widest uppercase text-base">Nueva Cotización</span>
+                <button @click="startNewQuote" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-black py-5 sm:py-7 px-5 rounded-2xl shadow-xl shadow-cyan-900/20 flex flex-col items-center justify-center gap-1.5 sm:gap-2 active:scale-95 transition-all">
+                    <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 13h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <span class="tracking-widest uppercase text-sm sm:text-base">Nueva Cotización</span>
                 </button>
 
                 <!-- HISTORIAL -->
@@ -301,10 +300,16 @@
                         </div>
                     </div>
 
-                    <button @click="addItem" class="w-full py-3.5 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-800 font-bold text-xs uppercase opacity-70 hover:opacity-100 hover:border-cyan-500 transition-all flex items-center justify-center gap-1.5">
-                        <svg class="w-4 h-4 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-                        <span>Añadir concepto</span>
-                    </button>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <button @click="addItem" class="py-3 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-800 font-bold text-xs uppercase opacity-80 hover:opacity-100 hover:border-cyan-500 transition-all flex items-center justify-center gap-1.5">
+                            <svg class="w-4 h-4 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                            <span>Añadir concepto vacío</span>
+                        </button>
+                        <button @click="openCatalogPicker" class="py-3 rounded-xl bg-cyan-600/10 hover:bg-cyan-600/20 text-cyan-700 dark:text-cyan-300 border border-cyan-500/30 font-bold text-xs uppercase transition-all flex items-center justify-center gap-1.5 shadow-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                            <span>+ Desde Catálogo ({{ catalog.length }})</span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- OPCIONES DE COTIZACIÓN -->
@@ -341,15 +346,15 @@
                 </div>
 
                 <!-- PANEL TOTAL Y BOTÓN DE GENERACIÓN -->
-                <div class="card p-5 space-y-4 border-2 border-cyan-600/30">
+                <div class="card p-3.5 sm:p-5 space-y-3 sm:space-y-4 border-2 border-cyan-600/30">
                     <div class="flex justify-between items-center font-black">
-                        <span class="opacity-50 text-xs uppercase tracking-wider">Total a cobrar:</span>
-                        <span class="text-3xl text-cyan-600 dark:text-cyan-400">{{ formatCurrency(totalQuote, currentQuote.currency) }}</span>
+                        <span class="opacity-50 text-[11px] sm:text-xs uppercase tracking-wider">Total a cobrar:</span>
+                        <span class="text-2xl sm:text-3xl text-cyan-600 dark:text-cyan-400">{{ formatCurrency(totalQuote, currentQuote.currency) }}</span>
                     </div>
 
-                    <button @click="generateAndSend" :disabled="isGenerating" :class="currentQuote.clientPhone ? 'btn-wa' : 'btn-main'" class="w-full py-4 rounded-xl shadow-lg active:scale-95 transition-all text-sm uppercase tracking-wider flex items-center justify-center gap-2">
-                        <svg v-if="!isGenerating && currentQuote.clientPhone" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.356.101.174.449.741.964 1.2.662.591 1.221.774 1.394.861.174.086.275.072.376-.044.101-.116.433-.506.549-.679.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
-                        <svg v-else-if="!isGenerating" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <button @click="generateAndSend" :disabled="isGenerating" :class="currentQuote.clientPhone ? 'btn-wa' : 'btn-main'" class="w-full py-3.5 sm:py-4 rounded-xl shadow-lg active:scale-95 transition-all text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2">
+                        <svg v-if="!isGenerating && currentQuote.clientPhone" class="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.356.101.174.449.741.964 1.2.662.591 1.221.774 1.394.861.174.086.275.072.376-.044.101-.116.433-.506.549-.679.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
+                        <svg v-else-if="!isGenerating" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                         <span>{{ isGenerating ? 'Generando PDF...' : (currentQuote.clientPhone ? 'Descargar y WhatsApp' : 'Descargar PDF') }}</span>
                     </button>
                 </div>
@@ -369,17 +374,21 @@
                 </div>
 
                 <!-- TABS DE AJUSTES -->
-                <div class="grid grid-cols-3 gap-2 p-1 bg-slate-200/60 dark:bg-slate-800/60 rounded-2xl">
-                    <button @click="settingsTab = 'business'" :class="settingsTab === 'business' ? 'bg-cyan-600 text-white shadow-md' : 'opacity-70 hover:opacity-100'" class="py-2.5 px-2 rounded-xl text-xs font-black uppercase transition-all flex items-center justify-center gap-1.5">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                <div class="grid grid-cols-4 gap-1.5 p-1 bg-slate-200/60 dark:bg-slate-800/60 rounded-2xl">
+                    <button @click="settingsTab = 'business'" :class="settingsTab === 'business' ? 'bg-cyan-600 text-white shadow-md' : 'opacity-70 hover:opacity-100'" class="py-2.5 px-1.5 rounded-xl text-[11px] font-black uppercase transition-all flex flex-col sm:flex-row items-center justify-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                         <span>Negocio</span>
                     </button>
-                    <button @click="settingsTab = 'pdf'" :class="settingsTab === 'pdf' ? 'bg-cyan-600 text-white shadow-md' : 'opacity-70 hover:opacity-100'" class="py-2.5 px-2 rounded-xl text-xs font-black uppercase transition-all flex items-center justify-center gap-1.5">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                        <span>PDF & Logo</span>
+                    <button @click="settingsTab = 'catalog'" :class="settingsTab === 'catalog' ? 'bg-cyan-600 text-white shadow-md' : 'opacity-70 hover:opacity-100'" class="py-2.5 px-1.5 rounded-xl text-[11px] font-black uppercase transition-all flex flex-col sm:flex-row items-center justify-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                        <span>Catálogo</span>
                     </button>
-                    <button @click="settingsTab = 'whatsapp'" :class="settingsTab === 'whatsapp' ? 'bg-cyan-600 text-white shadow-md' : 'opacity-70 hover:opacity-100'" class="py-2.5 px-2 rounded-xl text-xs font-black uppercase transition-all flex items-center justify-center gap-1.5">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.356.101.174.449.741.964 1.2.662.591 1.221.774 1.394.861.174.086.275.072.376-.044.101-.116.433-.506.549-.679.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
+                    <button @click="settingsTab = 'pdf'" :class="settingsTab === 'pdf' ? 'bg-cyan-600 text-white shadow-md' : 'opacity-70 hover:opacity-100'" class="py-2.5 px-1.5 rounded-xl text-[11px] font-black uppercase transition-all flex flex-col sm:flex-row items-center justify-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        <span>PDF/Logo</span>
+                    </button>
+                    <button @click="settingsTab = 'whatsapp'" :class="settingsTab === 'whatsapp' ? 'bg-cyan-600 text-white shadow-md' : 'opacity-70 hover:opacity-100'" class="py-2.5 px-1.5 rounded-xl text-[11px] font-black uppercase transition-all flex flex-col sm:flex-row items-center justify-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.179.182-.077.356.101.174.449.741.964 1.2.662.591 1.221.774 1.394.861.174.086.275.072.376-.044.101-.116.433-.506.549-.679.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
                         <span>WhatsApp</span>
                     </button>
                 </div>
@@ -427,7 +436,74 @@
                     </div>
                 </div>
 
-                <!-- 2. TAB CONFIGURACIÓN DE PDF Y SUBIR LOGO -->
+                <!-- 2. TAB CATÁLOGO DE SERVICIOS Y MATERIALES -->
+                <div v-if="settingsTab === 'catalog'" class="space-y-4">
+                    <div class="card p-5 space-y-4">
+                        <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                            <div>
+                                <h3 class="text-xs font-black uppercase tracking-wider text-cyan-600 dark:text-cyan-400">Servicios y Materiales Frecuentes</h3>
+                                <p class="text-[10px] font-bold opacity-50">Agrégalos rápidamente al cotizar sin volver a escribir</p>
+                            </div>
+                            <span class="text-[10px] font-black px-2 py-0.5 rounded bg-cyan-600/10 text-cyan-600 dark:text-cyan-400">{{ catalog.length }} Guardados</span>
+                        </div>
+
+                        <!-- FORMULARIO NUEVO ÍTEM DEL CATÁLOGO -->
+                        <div class="p-3.5 rounded-xl border border-dashed border-cyan-500/40 bg-cyan-50/50 dark:bg-cyan-950/20 space-y-3">
+                            <span class="text-[10px] font-black uppercase tracking-wider text-cyan-700 dark:text-cyan-300 block">+ Nuevo elemento al catálogo</span>
+                            <div class="space-y-2">
+                                <input type="text" v-model="newCatalogItem.name" placeholder="Nombre o descripción (ej: Mano de obra instalación)" class="w-full p-2.5 rounded-lg outline-none font-bold text-xs">
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="text-[9px] font-black uppercase opacity-60 block mb-0.5">Precio sugerido:</label>
+                                        <input 
+                                            type="text" 
+                                            inputmode="numeric" 
+                                            :value="formatDots(newCatalogItem.price)" 
+                                            @input="onNewCatalogPriceInput" 
+                                            placeholder="0" 
+                                            class="w-full p-2.5 rounded-lg outline-none font-black text-xs text-right text-cyan-600"
+                                        >
+                                    </div>
+                                    <div>
+                                        <label class="text-[9px] font-black uppercase opacity-60 block mb-0.5">Tipo:</label>
+                                        <select v-model="newCatalogItem.category" class="w-full p-2.5 rounded-lg font-bold text-xs outline-none">
+                                            <option value="servicio">Servicio / Labor</option>
+                                            <option value="material">Material / Repuesto</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <button @click="addCatalogItem" :disabled="!newCatalogItem.name.trim()" class="w-full py-2.5 rounded-lg btn-main text-xs uppercase font-black shadow disabled:opacity-50 active:scale-95 transition-all">
+                                Guardar en Catálogo
+                            </button>
+                        </div>
+
+                        <!-- LISTA DE ÍTEMS DEL CATÁLOGO -->
+                        <div class="space-y-2">
+                            <div v-if="catalog.length === 0" class="text-center py-6 text-xs opacity-50 font-bold">
+                                No tienes elementos en el catálogo aún.
+                            </div>
+                            <div v-for="(catItem, cIdx) in catalog" :key="catItem.id" class="p-3 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 bg-slate-50/50 dark:bg-slate-900/30">
+                                <div class="min-w-0 flex-1">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-[9px] font-black uppercase px-1.5 py-0.5 rounded" :class="catItem.category === 'material' ? 'bg-amber-500/10 text-amber-600' : 'bg-blue-500/10 text-blue-600'">
+                                            {{ catItem.category === 'material' ? 'Material' : 'Servicio' }}
+                                        </span>
+                                        <p class="font-bold text-xs truncate">{{ catItem.name }}</p>
+                                    </div>
+                                    <p class="text-[11px] font-black text-cyan-600 dark:text-cyan-400 mt-0.5">
+                                        {{ formatCurrency(catItem.price || 0, techData.defaultCurrency) }}
+                                    </p>
+                                </div>
+                                <button @click="deleteCatalogItem(cIdx)" class="text-red-500 hover:text-red-700 p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors" title="Eliminar del catálogo">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. TAB CONFIGURACIÓN DE PDF Y SUBIR LOGO -->
                 <div v-if="settingsTab === 'pdf'" class="space-y-4">
                     <!-- SECCIÓN LOGOTIPO -->
                     <div class="card p-5 space-y-4">
@@ -538,16 +614,87 @@
                 </div>
 
                 <!-- BOTONES DE ACCIÓN EN AJUSTES -->
-                <div class="flex flex-col sm:flex-row items-center gap-3 pt-2">
-                    <button @click="saveSettingsAndBack" class="w-full sm:flex-1 py-3.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-black text-xs uppercase tracking-wider shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2">
+                <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 pt-1 sm:pt-2">
+                    <button @click="saveSettingsAndBack" class="w-full sm:flex-1 py-3 sm:py-3.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-black text-xs uppercase tracking-wider shadow-md transition-all active:scale-95 flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                        <span>Guardar Ajustes</span>
+                        <span>Guardar y Volver</span>
                     </button>
-                    <button @click="resetApp" class="w-full sm:w-auto px-4 py-3.5 text-red-500 hover:bg-red-500/10 rounded-xl font-bold text-xs uppercase opacity-70 hover:opacity-100 transition-all">
+                    <button @click="resetApp" class="w-full sm:w-auto px-4 py-2.5 sm:py-3.5 text-red-500 hover:bg-red-500/10 rounded-xl font-bold text-xs uppercase opacity-70 hover:opacity-100 transition-all">
                         Restablecer App
                     </button>
                 </div>
             </section>
+
+            <!-- MODAL RÁPIDO: AGREGAR DESDE CATÁLOGO -->
+            <transition name="fade">
+                <div v-if="ui.showCatalogPicker" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+                    <div class="card w-full max-w-lg p-3.5 sm:p-5 space-y-3 sm:space-y-4 max-h-[85vh] flex flex-col shadow-2xl">
+                        <div class="flex items-center justify-between pb-2 sm:pb-3 border-b border-slate-200 dark:border-slate-800">
+                            <div class="flex items-center gap-2">
+                                <span class="p-1.5 rounded-lg bg-cyan-600/10 text-cyan-600 text-sm">⚡</span>
+                                <div>
+                                    <h3 class="font-black text-xs sm:text-sm uppercase">Seleccionar del Catálogo</h3>
+                                    <p class="text-[9px] sm:text-[10px] font-bold opacity-60">Toca un ítem para añadirlo a la cotización</p>
+                                </div>
+                            </div>
+                            <button @click="ui.showCatalogPicker = false" class="p-1.5 rounded-lg opacity-60 hover:opacity-100 text-base font-black">
+                                ✕
+                            </button>
+                        </div>
+
+                        <!-- BUSCADOR RÁPIDO -->
+                        <div>
+                            <input 
+                                type="text" 
+                                v-model="catalogFilter" 
+                                placeholder="Buscar en el catálogo..." 
+                                class="w-full p-3 rounded-xl outline-none font-bold text-xs"
+                            >
+                        </div>
+
+                        <!-- LISTA DE ÍTEMS FILTRADOS -->
+                        <div class="flex-1 overflow-y-auto space-y-2 pr-1">
+                            <div v-if="filteredCatalog.length === 0" class="text-center py-8">
+                                <p class="text-xs font-bold opacity-50">No hay elementos coincidentes.</p>
+                                <button @click="goToCatalogSettings" class="mt-3 text-cyan-600 text-xs font-black underline uppercase">
+                                    + Crear nuevos en Ajustes
+                                </button>
+                            </div>
+
+                            <button 
+                                v-for="cItem in filteredCatalog" 
+                                :key="cItem.id" 
+                                @click="insertItemFromCatalog(cItem)" 
+                                class="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-800 text-left hover:border-cyan-500 hover:bg-cyan-500/5 transition-all flex items-center justify-between gap-3 group"
+                            >
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-2 mb-0.5">
+                                        <span class="text-[8px] font-black uppercase px-1.5 py-0.5 rounded" :class="cItem.category === 'material' ? 'bg-amber-500/10 text-amber-600' : 'bg-blue-500/10 text-blue-600'">
+                                            {{ cItem.category === 'material' ? 'Material' : 'Servicio' }}
+                                        </span>
+                                        <p class="font-bold text-xs group-hover:text-cyan-600 dark:group-hover:text-cyan-400 truncate">{{ cItem.name }}</p>
+                                    </div>
+                                    <p class="text-xs font-black text-cyan-600 dark:text-cyan-400">
+                                        {{ formatCurrency(cItem.price || 0, currentQuote.currency) }}
+                                    </p>
+                                </div>
+                                <span class="text-xs font-black text-cyan-600 group-hover:translate-x-1 transition-transform">
+                                    + Añadir
+                                </span>
+                            </button>
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center text-xs">
+                            <button @click="goToCatalogSettings" class="text-cyan-600 font-bold hover:underline">
+                                Administrar catálogo
+                            </button>
+                            <button @click="ui.showCatalogPicker = false" class="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 font-black">
+                                Cerrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </transition>
 
         </div>
     </div>
@@ -565,8 +712,11 @@ createApp({
             theme: 'light',
             isGenerating: false, 
             alert: { show: false, msg: '', type: 'success' },
-            ui: { showQuoteOptions: false },
+            ui: { showQuoteOptions: false, showCatalogPicker: false },
             history: [],
+            catalog: [],
+            catalogFilter: '',
+            newCatalogItem: { name: '', price: null, category: 'servicio' },
             techData: { 
                 name: '', 
                 phone: '', 
@@ -595,6 +745,11 @@ createApp({
         totalQuote() { 
             return this.currentQuote.items.reduce((acc, i) => acc + ((i.qty || 1) * (i.price || 0)), 0); 
         },
+        filteredCatalog() {
+            if (!this.catalogFilter.trim()) return this.catalog;
+            const q = this.catalogFilter.toLowerCase().trim();
+            return this.catalog.filter(i => (i.name || '').toLowerCase().includes(q) || (i.category || '').toLowerCase().includes(q));
+        },
         previewWaMessage() {
             const template = this.techData.waMessageTemplate || 'Hola {cliente}, te comparto la cotización de {negocio}.';
             const client = this.currentQuote.clientName ? this.currentQuote.clientName.trim() : 'Carlos';
@@ -609,6 +764,7 @@ createApp({
     mounted() {
         const c = localStorage.getItem('cp_v7_config');
         const h = localStorage.getItem('cp_v7_history');
+        const cat = localStorage.getItem('cp_v7_catalog');
         const t = localStorage.getItem('cp_v7_theme') || 'light';
         this.theme = t;
         this.applyThemeClass();
@@ -618,6 +774,17 @@ createApp({
         }
         if (h) {
             try { this.history = JSON.parse(h); } catch(e) { this.history = []; }
+        }
+        if (cat) {
+            try { this.catalog = JSON.parse(cat); } catch(e) { this.catalog = []; }
+        } else {
+            // Ítems iniciales recomendados
+            this.catalog = [
+                { id: 'cat-1', name: 'Mano de obra técnica / Instalación', price: 80000, category: 'servicio' },
+                { id: 'cat-2', name: 'Mantenimiento preventivo y revisión', price: 120000, category: 'servicio' },
+                { id: 'cat-3', name: 'Materiales e insumos generales', price: 50000, category: 'material' }
+            ];
+            this.saveCatalog();
         }
         if ('serviceWorker' in navigator) { 
             navigator.serviceWorker.register('./sw.js').catch(e => console.log(e)); 
@@ -654,6 +821,57 @@ createApp({
             if (!this.techData.waMessageTemplate) this.techData.waMessageTemplate = '';
             this.techData.waMessageTemplate += ' ' + variable;
             this.saveSettings();
+        },
+        saveCatalog() {
+            localStorage.setItem('cp_v7_catalog', JSON.stringify(this.catalog));
+        },
+        onNewCatalogPriceInput(event) {
+            const rawDigits = event.target.value.replace(/\D/g, '');
+            this.newCatalogItem.price = rawDigits ? parseInt(rawDigits, 10) : null;
+            event.target.value = this.formatDots(this.newCatalogItem.price);
+        },
+        addCatalogItem() {
+            if (!this.newCatalogItem.name.trim()) return;
+            this.catalog.push({
+                id: 'cat-' + Date.now(),
+                name: this.newCatalogItem.name.trim(),
+                price: this.newCatalogItem.price || 0,
+                category: this.newCatalogItem.category || 'servicio'
+            });
+            this.saveCatalog();
+            this.newCatalogItem = { name: '', price: null, category: 'servicio' };
+            this.showAlert('¡Elemento guardado en catálogo!');
+        },
+        deleteCatalogItem(idx) {
+            this.catalog.splice(idx, 1);
+            this.saveCatalog();
+            this.showAlert('Elemento eliminado del catálogo');
+        },
+        openCatalogPicker() {
+            this.catalogFilter = '';
+            this.ui.showCatalogPicker = true;
+        },
+        goToCatalogSettings() {
+            this.ui.showCatalogPicker = false;
+            this.openSettingsTab('catalog');
+        },
+        insertItemFromCatalog(catItem) {
+            // Si el primer item está completamente vacío, reemplazarlo
+            if (this.currentQuote.items.length === 1 && !this.currentQuote.items[0].desc && (this.currentQuote.items[0].price === null || this.currentQuote.items[0].price === 0)) {
+                this.currentQuote.items[0] = {
+                    desc: catItem.name,
+                    qty: 1,
+                    price: catItem.price || 0
+                };
+            } else {
+                this.currentQuote.items.push({
+                    desc: catItem.name,
+                    qty: 1,
+                    price: catItem.price || 0
+                });
+            }
+            this.ui.showCatalogPicker = false;
+            this.showAlert(`Añadido: ${catItem.name}`);
         },
         finishOnboarding() { 
             this.saveSettings(); 
